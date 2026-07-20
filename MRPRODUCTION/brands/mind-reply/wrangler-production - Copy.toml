@@ -1,0 +1,33 @@
+name = "aurel-api"
+type = "javascript"
+main = "backend/dist/index.js"
+
+account_id = ""
+workers_dev = false
+
+route = "aurel.mind-reply.com/api/*"
+zone_id = ""
+
+[env.production]
+name = "aurel-api-prod"
+route = "aurel.mind-reply.com/api/*"
+vars = { 
+  ENVIRONMENT = "production"
+  API_URL = "https://aurel.mind-reply.com"
+  FRONTEND_URL = "https://aurel.mind-reply.com"
+}
+
+[build]
+command = "npm run build"
+cwd = "./backend"
+
+[build.upload]
+format = "modules"
+main = "./dist/index.js"
+
+[compatibility]
+compatibility_date = "2025-01-01"
+
+[[routes]]
+pattern = "aurel.mind-reply.com/api/*"
+zone_name = "mind-reply.com"

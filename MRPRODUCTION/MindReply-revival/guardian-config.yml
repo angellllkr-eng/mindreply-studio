@@ -1,0 +1,67 @@
+﻿# Guardian config for MindReply
+# This file controls the scanner without editing Python code.
+
+skip_dirs:
+  - .git
+  - node_modules
+  - .next
+  - dist
+  - build
+  - .venv
+  - venv
+  - __pycache__
+  - .pytest_cache
+  - coverage
+  - .turbo
+
+skip_files:
+  - guardian-report.md
+  - guardian-report.json
+  - guardian-config.yml
+  - scripts/guardian_scan.py
+
+text_extensions:
+  - .ps1
+  - .py
+  - .js
+  - .ts
+  - .tsx
+  - .jsx
+  - .json
+  - .yml
+  - .yaml
+  - .md
+  - .txt
+  - .env
+  - .example
+  - .html
+  - .css
+  - .sql
+  - .toml
+  - .dockerignore
+  - .gitignore
+
+archive_extensions:
+  - .zip
+  - .rar
+  - .7z
+  - .tar
+  - .gz
+
+allowlisted_files:
+  - .env.example
+  - .github/copilot-instructions.md
+  - CLAUDE.md
+  - AGENTS.md
+  - docs/AUTOMATION_RUNBOOK.md
+
+danger_terms:
+  - RUN_REAL_DEPLOYS=1
+  - git push origin main --force
+  - git push origin main --force-with-lease
+  - docker-compose down -v
+  - docker compose down -v
+  - rm -rf /
+  - vercel --prod
+  - netlify deploy --prod
+  - railway up

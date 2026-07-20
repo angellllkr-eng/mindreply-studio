@@ -1,0 +1,20 @@
+{
+  "name": "mr-backend-core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Unified backend for MRPRODUCTION fleet — Express + Supabase + multi-provider LLM fallback",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "build": "echo no build step"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "@supabase/supabase-js": "^2.45.4",
+    "node-fetch": "^3.3.2"
+  }
+}

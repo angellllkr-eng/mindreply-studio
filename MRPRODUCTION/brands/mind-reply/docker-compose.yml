@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # PostgreSQL (Supabase replacement for local dev)
+  postgres:
+    image: postgres:16-alpine
+    container_name: mindreply-db
+    environment:
+      POSTGRES_DB: mindreply
+      POSTGRES_USER: mindreply_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mindreply_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./server/db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindreply_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mindreply-network
+
+  # MindReply Backend + Frontend
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mindreply-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      DATABASE_URL: postgresql://mindreply_user:${DB_PASSWORD:-mindreply_dev_password}@postgres:5432/mindreply
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_KEY: ${SUPABASE_KEY:-}
+      N8N_WEBHOOK_URL: ${N8N_WEBHOOK_URL:-}
+      SALESFORCE_CLIENT_ID: ${SALESFORCE_CLIENT_ID:-}
+      SALESFORCE_CLIENT_SECRET: ${SALESFORCE_CLIENT_SECRET:-}
+      JWT_SECRET: ${JWT_SECRET:-mindreply_jwt_dev_secret}
+      MCP_PORT: 3001
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./src:/app/src
+      - ./server:/app/server
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - mindreply-network
+
+  # Redis (for caching, sessions, MCP message queue)
+  redis:
+    image: redis:7-alpine
+    container_name: mindreply-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mindreply-network
+
+  # Optional: PgAdmin for database management during dev
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mindreply-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mindreply.local
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - mindreply-network
+    profiles:
+      - dev
+
+networks:
+  mindreply-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

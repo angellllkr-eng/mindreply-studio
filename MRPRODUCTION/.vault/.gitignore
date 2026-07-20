@@ -1,0 +1,7 @@
+.vault/
+*.env
+.env*
+secrets.json
+credentials.json
+*.key
+*.pem

@@ -1,0 +1,22 @@
+name = "mind-reply-com"
+type = "javascript"
+
+[env.production]
+name = "mind-reply-com-prod"
+routes = [
+  { pattern = "www.mind-reply.com", zone_name = "mind-reply.com" }
+]
+
+[[build]]
+cwd = "public"
+command = ""
+
+[build.upload]
+dir = "public"
+
+[vars]
+ENVIRONMENT = "production"
+API_URL = "https://api.mind-reply.com"
+
+[compatibility_date]
+compatibility_date = "2025-01-01"

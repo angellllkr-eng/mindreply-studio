@@ -1,0 +1,19 @@
+{
+  "name": "@mindreply/shared-ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    "./styles/mindreply.css": "./src/styles/mindreply.css",
+    "./lib/api": "./src/lib/api.js",
+    "./components/ChatPanel": "./src/components/ChatPanel.jsx",
+    "./components/FleetPanel": "./src/components/FleetPanel.jsx",
+    "./components/MemoryRail": "./src/components/MemoryRail.jsx",
+    "./components/AgentsPanel": "./src/components/AgentsPanel.jsx"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+name = "mindreply-shell"
+type = "javascript"
+
+account_id = ""
+workers_dev = true
+
+route = "shell.mind-reply.com/*"
+zone_id = ""
+
+[env.production]
+route = "shell.mind-reply.com/*"
+vars = { ENVIRONMENT = "production" }
+
+[build]
+command = "npm run build"
+cwd = "./shell"
+
+[build.upload]
+format = "modules"
+main = "./dist/index.js"
