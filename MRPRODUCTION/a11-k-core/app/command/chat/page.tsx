@@ -96,20 +96,55 @@ const PRESETS = [
 ];
 
 const FALLBACK_PROVIDERS: Provider[] = [
-  ["ai_gateway", "Vercel AI Gateway", ["AI_GATEWAY_API_KEY"], "central model routing"],
-  ["openai", "OpenAI", ["OPENAI_API_KEY"], "general chat + shipping modes"],
-  ["anthropic", "Anthropic / Claude", ["ANTHROPIC_API_KEY"], "code review + decision analysis"],
-  ["xai", "xAI / Grok", ["XAI_API_KEY"], "shipping + executive summary"],
-  ["google", "Google / Gemini", ["GOOGLE_GENERATIVE_AI_API_KEY"], "SEO + general reasoning"],
-  ["openwebui", "Open WebUI / local", ["OPENWEBUI_BASE_URL", "OPENWEBUI_API_KEY"], "local fallback"],
-].map(([id, label, env, purpose]) => ({
-  id,
-  label,
-  env,
-  purpose,
-  configured: false,
-  status: "unknown",
-}));
+  {
+    id: "ai_gateway",
+    label: "Vercel AI Gateway",
+    env: ["AI_GATEWAY_API_KEY"],
+    purpose: "central model routing",
+    configured: false,
+    status: "unknown",
+  },
+  {
+    id: "openai",
+    label: "OpenAI",
+    env: ["OPENAI_API_KEY"],
+    purpose: "general chat + shipping modes",
+    configured: false,
+    status: "unknown",
+  },
+  {
+    id: "anthropic",
+    label: "Anthropic / Claude",
+    env: ["ANTHROPIC_API_KEY"],
+    purpose: "code review + decision analysis",
+    configured: false,
+    status: "unknown",
+  },
+  {
+    id: "xai",
+    label: "xAI / Grok",
+    env: ["XAI_API_KEY"],
+    purpose: "shipping + executive summary",
+    configured: false,
+    status: "unknown",
+  },
+  {
+    id: "google",
+    label: "Google / Gemini",
+    env: ["GOOGLE_GENERATIVE_AI_API_KEY"],
+    purpose: "SEO + general reasoning",
+    configured: false,
+    status: "unknown",
+  },
+  {
+    id: "openwebui",
+    label: "Open WebUI / local",
+    env: ["OPENWEBUI_BASE_URL", "OPENWEBUI_API_KEY"],
+    purpose: "local fallback",
+    configured: false,
+    status: "unknown",
+  },
+];
 
 const INITIAL_MESSAGE: ChatMessage = {
   id: "system-ready",
