@@ -4,13 +4,6 @@ import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { getProviders, modelFallbackActive } from "@/lib/models";
 
-/**
- * A11-K Command Chat — provider fallback chain.
- *
- * Order: OpenAI → Anthropic → Gemini → Groq → Cerebras → Mistral → OpenRouter
- * Only providers with configured keys are attempted.
- * Never fabricates completions. Returns honest fallback when all providers are missing.
- */
 export async function POST(req: Request) {
   let body: {
     message?: string;
@@ -62,8 +55,6 @@ Rules:
 - ${safeMode ? "Safe mode is ON. Do not suggest destructive actions, DNS changes, secret changes, or unapproved deployments." : ""}
 - Keep answers concise. Use plain English.`;
 
-  // Try providers in fallback order
-  const providerOrder = ["openai", "anthropic", "google", "groq", "cerebras", "mistral", "openrouter"];
   const configuredIds = new Set(active.map((p) => p.id));
 
   // OpenAI
@@ -94,21 +85,20 @@ Rules:
     }
   }
 
-  // Future: Gemini fallback (when GOOGLE_GENERATIVE_AI_API_KEY is configured)
-  // if (configuredIds.has("google")) {
-  //   try {
-  //     const { google } = await import("@ai-sdk/google");
-  //     const result = streamText({
-  //       model: google("gemini-2.0-flash"),
-  //       system: systemPrompt,
-  //       messages: [{ role: "user", content: userMessage }],
-  //       maxTokens: 1200,
-  //     });
-  //     return result.toTextStreamResponse();
-  //   } catch (err) {
-  //     console.error("Gemini stream failed:", err);
-  //   }
-  // }
+  // Gemini (active)
+  if (configuredIds.has("google")) {
+    try {
+      const { google } = await import("@ai-sdk/google");
+      const result = streamText({
+        model: google("gemini-2.0-flash"),
+        system: systemPrompt,
+        messages: [{ role: "user", content: userMessage }],
+      });
+      return result.toTextStreamResponse();
+    } catch (err) {
+      console.error("Gemini stream failed:", err);
+    }
+  }
 
   // All providers failed or not configured
   return NextResponse.json({
