@@ -1,4 +1,4 @@
-﻿async function getTrends() {
+async function getTrends() {
   try {
     const base = process.env.NEXT_PUBLIC_SITE_URL || "";
     const res = await fetch(`${base}/api/command/trends`, { cache: "no-store" });
@@ -11,7 +11,7 @@
         {
           source: "AUREL",
           title: "Trend Intel waiting for backend",
-          signal: "Placeholder — backend not configured.",
+          signal: "Placeholder � backend not configured.",
           suggestedAction: "Open /api/command/trends after deploy and verify response.",
         },
       ],
@@ -27,10 +27,10 @@ export default async function CommandPage() {
     <main className="min-h-screen bg-[#05070b] text-white">
       <section className="mx-auto max-w-7xl px-5 py-8">
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-          <p className="text-xs uppercase tracking-[0.35em] text-[#5ee1ff]">Private owner system</p>
-          <h1 className="mt-3 text-4xl font-semibold">Ask AUREL</h1>
+          <p className="text-xs uppercase tracking-[0.35em] text-[#5ee1ff]">Private command layer</p>
+          <h1 className="mt-3 text-4xl font-semibold">Ask A11-K</h1>
           <p className="mt-2 text-white/60">
-            Powered by A11-K. Command, trends, workflows, action queue, rollback.
+            The private command layer for decisions, workflows, and protected execution.
           </p>
         </div>
 
@@ -70,11 +70,11 @@ export default async function CommandPage() {
                       {item.source}
                     </span>
                     <span className="text-[11px] text-white/35">
-                      score {item.score || "n/a"} · comments {item.comments || "n/a"}
+                      score {item.score || "n/a"} � comments {item.comments || "n/a"}
                     </span>
                   </div>
                   <h3 className="mt-2 text-sm font-medium text-white/90">
-                    {item.url ? {item.url}{item.title}</a> : item.title}
+                    {item.url ? <a href={item.url} className="hover:text-[#5ee1ff]">{item.title}</a> : item.title}
                   </h3>
                   <p className="mt-2 text-xs text-white/55">{item.signal}</p>
                   <p className="mt-2 text-xs text-[#e4c06f]">Action: {item.suggestedAction}</p>

@@ -42,6 +42,7 @@ export async function GET() {
         "N8N_BASE_URL",
         "N8N_API_KEY",
         "VERCEL_TOKEN",
+        "GH_TOKEN",
         "GITHUB_TOKEN",
       ]),
     },

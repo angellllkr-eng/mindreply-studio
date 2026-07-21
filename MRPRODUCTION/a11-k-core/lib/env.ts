@@ -8,8 +8,9 @@ export function missingEnv(names: string[]): string[] {
   return names.filter((n) => !hasEnv(n));
 }
 
+/** True if ANY listed env is present (multi-key providers like GitHub). */
 export function providerConfigured(envs: string[]): boolean {
-  return envs.every((n) => hasEnv(n));
+  return envs.some((n) => hasEnv(n));
 }
 
 /** Production command access is ready only when both gate inputs exist. */

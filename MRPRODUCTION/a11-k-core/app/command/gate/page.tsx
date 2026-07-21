@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -13,7 +13,7 @@ function GateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
-  const next = internalNext(params.get("next"));
+  const next = internalNext(params?.get("next"));
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

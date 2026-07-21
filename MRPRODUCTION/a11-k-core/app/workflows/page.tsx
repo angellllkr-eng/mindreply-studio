@@ -5,7 +5,7 @@ import { WORKFLOWS, n8nBlockedBy } from "@/lib/workflows";
 
 export const metadata: Metadata = {
   title: "Workflows",
-  description: "workflow automation workflow hub map — paths and status only, no workflow connection secrets.",
+  description: "Workflow Status map — paths and status only, no workflow connection secrets.",
 };
 
 export default function WorkflowsPage() {
@@ -16,7 +16,7 @@ export default function WorkflowsPage() {
       <main className="section">
         <div className="container stack">
           <div>
-            <h1 style={{ margin: 0 }}>workflow automation Workflow Hub</h1>
+            <h1 style={{ margin: 0 }}>Workflow Status</h1>
             <p className="muted">
               Dashboard map only. workflow connection secrets never shown.{" "}
               {blocked.length ? "Wiring is pending" : "Base wiring is ready (abstract)"}

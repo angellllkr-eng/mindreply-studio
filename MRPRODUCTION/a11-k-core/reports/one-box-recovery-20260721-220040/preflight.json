@@ -1,0 +1,30 @@
+﻿[
+    {
+        "path":  "package.json",
+        "exists":  true
+    },
+    {
+        "path":  "src\\App.tsx",
+        "exists":  false
+    },
+    {
+        "path":  "src\\pages\\Shell.tsx",
+        "exists":  false
+    },
+    {
+        "path":  "server\\index.js",
+        "exists":  false
+    },
+    {
+        "path":  "backend\\model-router\\timeout-failover.js",
+        "exists":  false
+    },
+    {
+        "path":  "backend\\audit-log",
+        "exists":  false
+    },
+    {
+        "path":  "backend\\middleware",
+        "exists":  false
+    }
+]

@@ -10,7 +10,7 @@ const DOCS = [
   { title: "Brand Registry", path: "docs/BRAND_REGISTRY.md" },
   { title: "Brand Idea Registry", path: "docs/BRAND_IDEA_REGISTRY.md" },
   { title: "Model Routing Map", path: "docs/MODEL_ROUTING_MAP.md" },
-  { title: "workflow automation Workflow Map", path: "docs/N8N_WORKFLOW_MAP.md" },
+  { title: "Workflow Map", path: "docs/N8N_WORKFLOW_MAP.md" },
   { title: "Action Safety Levels", path: "docs/AUTONOMY_LEVELS.md" },
   { title: "When to Notify Angel", path: "docs/ESCALATION_RULES.md" },
   { title: "Operating Twin Model", path: "docs/SHADOW_COMPANY_MODEL.md" },

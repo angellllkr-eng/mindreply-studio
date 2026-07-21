@@ -6,7 +6,7 @@ export default function CommandWorkflowsPage() {
   const blocked = n8nBlockedBy();
   return (
     <CommandShell
-      title="workflow automation Workflows"
+      title="Workflow Status"
       subtitle={
         blocked.length
           ? `Blocked credentials: ${blocked.join(", ")}`
