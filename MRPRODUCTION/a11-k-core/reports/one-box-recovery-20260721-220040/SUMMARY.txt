@@ -1,0 +1,35 @@
+﻿AUREL One-Box Recovery
+Run: 20260721-220040
+
+What this script actually did:
+- Opened repo: C:\Users\ANGEL\MRPRODUCTION\a11-k-core
+- Backed up edited files to: reports\one-box-recovery-20260721-220040\backups
+- Reused existing Shell as src/pages/Command.tsx when Shell existed
+- Added /command route to src/App.tsx
+- Added /api/command fallback endpoints when server/index.js existed
+- Added GitHub Action build verification workflow
+- Checked Vercel CLI and project link
+- Listed Vercel env names
+- Ran local build
+- Deployed preview
+- Checked preview /command and /api/command routes
+- Production deploy: False
+
+Key files:
+- src/pages/Command.tsx
+- src/App.tsx
+- server/index.js
+- .github/workflows/aurel-command-deploy-verify.yml
+
+If preview works but production does not:
+- run this again with -Prod
+- then check Vercel domain mapping for a11-k.space
+
+If build failed:
+- open reports\one-box-recovery-20260721-220040\build.log
+
+If preview deploy failed:
+- open reports\one-box-recovery-20260721-220040\vercel-preview.txt
+
+If env missing:
+- open reports\one-box-recovery-20260721-220040\vercel-env-ls.txt
