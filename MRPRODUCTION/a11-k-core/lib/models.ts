@@ -2,34 +2,38 @@ import type { ProviderStatus } from "./types";
 import { missingEnv, providerConfigured } from "./env";
 
 export const CHAT_MODES = [
+  { id: "chief_orchestrator", label: "Chief Orchestrator", purpose: "coordinate safe next actions" },
   { id: "shipping_engineer", label: "Shipping Engineer", purpose: "code, deploy, verify" },
-  { id: "seo_strategist", label: "SEO Strategist", purpose: "search pages, positioning, metadata" },
   { id: "brand_architect", label: "Brand Architect", purpose: "brand structure and copy" },
-  { id: "n8n_operator", label: "n8n Workflow Operator", purpose: "workflows and webhooks" },
-  { id: "customer_support", label: "Customer Support Agent", purpose: "support + escalation" },
-  { id: "code_reviewer", label: "Code Reviewer", purpose: "review and fix paths" },
-  { id: "growth_planner", label: "Growth Planner", purpose: "growth loops and SEO" },
-  {
-    id: "luxury_analyst",
-    label: "Luxury/Hospitality/Yacht Analyst",
-    purpose: "Meridian / hospitality idea review",
-  },
+  { id: "n8n_operator", label: "n8n Workflow Operator", purpose: "workflows and escalation routes" },
+  { id: "devops_dns", label: "DevOps / DNS Operator", purpose: "domains, builds, and rollback" },
+  { id: "shadow_analyst", label: "Shadow Company Analyst", purpose: "simulate decisions and risk" },
+  { id: "onedrive_miner", label: "OneDrive Idea Miner", purpose: "source-backed idea review" },
+  { id: "customer_support", label: "Customer Support Agent", purpose: "support routing and escalation" },
+  { id: "cost_limits", label: "Cost & Limits Analyst", purpose: "rate-limit and spend awareness" },
+  { id: "audit_observability", label: "Audit / Observability Analyst", purpose: "trace actions and blockers" },
   { id: "executive_summary", label: "Executive Summary", purpose: "owner-facing brief" },
 ] as const;
 
 export function getProviders(): ProviderStatus[] {
   const defs: Omit<ProviderStatus, "configured" | "status">[] = [
     {
+      id: "ai_gateway",
+      label: "Vercel AI Gateway",
+      env: ["AI_GATEWAY_API_KEY"],
+      purpose: "central model routing",
+    },
+    {
       id: "openai",
       label: "OpenAI",
       env: ["OPENAI_API_KEY"],
-      purpose: "general + shipping modes",
+      purpose: "general chat + shipping modes",
     },
     {
       id: "anthropic",
-      label: "Anthropic",
+      label: "Anthropic / Claude",
       env: ["ANTHROPIC_API_KEY"],
-      purpose: "code review + luxury analysis",
+      purpose: "code review + decision analysis",
     },
     {
       id: "xai",
@@ -41,13 +45,13 @@ export function getProviders(): ProviderStatus[] {
       id: "google",
       label: "Google / Gemini",
       env: ["GOOGLE_GENERATIVE_AI_API_KEY"],
-      purpose: "SEO + general",
+      purpose: "SEO + general reasoning",
     },
     {
       id: "openwebui",
       label: "Open WebUI / local",
-      env: ["OPENWEBUI_BASE_URL"],
-      purpose: "offline fallback",
+      env: ["OPENWEBUI_BASE_URL", "OPENWEBUI_API_KEY"],
+      purpose: "local fallback when configured",
     },
   ];
 
@@ -67,11 +71,12 @@ export function modelFallbackActive(): boolean {
 
 export function modelMissingNames(): string[] {
   return missingEnv([
+    "AI_GATEWAY_API_KEY",
     "OPENAI_API_KEY",
     "ANTHROPIC_API_KEY",
     "XAI_API_KEY",
     "GOOGLE_GENERATIVE_AI_API_KEY",
     "OPENWEBUI_BASE_URL",
-    "AI_GATEWAY_API_KEY",
+    "OPENWEBUI_API_KEY",
   ]);
 }

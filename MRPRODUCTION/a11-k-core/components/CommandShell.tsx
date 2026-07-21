@@ -2,12 +2,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const NAV = [
+  { href: "/command/chat", label: "Ask A11-K" },
   { href: "/command", label: "Overview" },
   { href: "/command/brands", label: "Brand Fleet" },
   { href: "/command/domains", label: "Domains" },
   { href: "/command/deployments", label: "Deployments" },
   { href: "/command/models", label: "Models" },
-  { href: "/command/chat", label: "AI Chat" },
   { href: "/command/workflows", label: "n8n Workflows" },
   { href: "/command/seo", label: "SEO / Growth" },
   { href: "/command/support", label: "Customer Support" },
@@ -51,6 +51,7 @@ export function CommandShell({
           </span>
           Command
         </div>
+        <div className="cmd-side-caption">PRIVATE OPERATING ROOM</div>
         <nav className="cmd-nav" aria-label="Command center">
           {NAV.map((item) => (
             <Link
@@ -62,14 +63,13 @@ export function CommandShell({
             </Link>
           ))}
           <Link href="/" style={{ marginTop: "1rem", color: "var(--faint)" }}>
-            ← Engine landing
+            &larr; Engine landing
           </Link>
         </nav>
       </aside>
       <main className="cmd-main">
         <div className="stealth-banner">
-          STEALTH MODE · Private surface · noindex · no customer data · secrets never rendered ·
-          missing systems shown as placeholder/blocked only
+          STEALTH MODE &middot; Private surface &middot; noindex &middot; no customer data &middot; secrets never rendered
         </div>
         <header className="cmd-header">
           <div>
@@ -78,7 +78,7 @@ export function CommandShell({
           </div>
           <div className="row">
             <span className="badge badge-stealth">private</span>
-            <span className="badge badge-placeholder">abstract layers</span>
+            <span className="badge badge-placeholder">safe mode</span>
           </div>
         </header>
         {children}

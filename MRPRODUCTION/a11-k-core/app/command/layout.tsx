@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./command.css";
 
 export const metadata: Metadata = {
   title: "Command Center",
