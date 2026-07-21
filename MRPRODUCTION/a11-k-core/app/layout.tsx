@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
+import "./brushworks.css";
 
 export const metadata: Metadata = {
   title: {
     default: "A11-K Engine Core",
-    template: "%s · A11-K",
+    template: "%s Â· A11-K",
   },
   description:
     "The command layer for MindReply models, workflows, brands, sites, and decisions.",
@@ -33,3 +34,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+

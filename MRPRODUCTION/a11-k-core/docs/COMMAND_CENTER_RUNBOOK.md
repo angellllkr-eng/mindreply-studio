@@ -1,4 +1,4 @@
-ï»¿# Command Center Runbook â€” A11-K
+# Command Center Runbook — A11-K
 
 ## Entry
 
@@ -30,17 +30,17 @@ Raw tokens are not accepted in query strings. The gate redirect strips the origi
 4. Workflows
 5. Models
 6. Deployments
-7. Shadow Company
+7. Operating Twin
 8. OneDrive sources
 9. Support
 10. Settings / logs
 
 ## State model
 
-- **Active** â€” implemented and backed by a verified configured dependency.
-- **Placeholder** â€” UI/docs exist but the live dependency is not connected.
-- **Blocked** â€” a required environment variable, credential, domain, or owner approval is missing.
-- **Verified** â€” a post-change check passed; do not use this for an untested assumption.
+- **Active** — implemented and backed by a verified configured dependency.
+- **Placeholder** — UI/docs exist but the live dependency is not connected.
+- **Blocked** — a required environment variable, credential, domain, or owner approval is missing.
+- **Verified** — a post-change check passed; do not use this for an untested assumption.
 
 ## AI chat
 

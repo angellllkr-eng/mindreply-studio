@@ -1,164 +1,62 @@
-import Link from "next/link";
+﻿import Link from "next/link";
+import { A11KStamp } from "@/components/A11KStamp";
+import { BentoCard, HumanNote, SectionIntro, StatusPill } from "@/components/Brushworks";
 import { PublicNav } from "@/components/PublicNav";
-import { StatusBadge } from "@/components/StatusBadge";
 import { BRAND_REGISTRY } from "@/lib/brand-registry";
 
-const SECTIONS = [
-  {
-    id: "system-map",
-    title: "System Map",
-    body: "Public brand sites stay public. A11-K is the engine core: status, models, workflows, and a private command layer.",
-  },
-  {
-    id: "brand-fleet",
-    title: "Brand Fleet",
-    body: "MindReply and tool modules on the public edge. Stealth brands (Meridian, BRIXO, labs) stay abstract until sources and boundaries are clear.",
-  },
-  {
-    id: "model-router",
-    title: "Model Router",
-    body: "Provider presence is detected by configuration presence only. No fake completions. Fallback mode when no providers are configured.",
-  },
-  {
-    id: "workflow-hub",
-    title: "n8n Workflow Hub",
-    body: "Workflow map with wiring placeholders. Trigger details are protected until wiring is configured.",
-  },
-  {
-    id: "deploy-monitor",
-    title: "Deployment Monitor",
-    body: "GitHub/Vercel watch is abstract until tokens are present. No spam deploys if limits are hit.",
-  },
-  {
-    id: "prediction",
-    title: "Prediction Layer",
-    body: "Predicts likely blockers (missing env, DNS, domain map) without inventing live incidents.",
-  },
-  {
-    id: "decision",
-    title: "Decision Layer",
-    body: "Autonomy levels 0–4. Default Level 1–2. Owner approval for DNS, secrets, destructive, and public/private boundary changes.",
-  },
-  {
-    id: "self-growth",
-    title: "Self-Growth Loop",
-    body: "SEO, intake, and weekly operating report loops — placeholder until wired, never fake active.",
-  },
-  {
-    id: "idea-vault",
-    title: "OneDrive Idea Vault",
-    body: "Abstract index of sources. Yacht idea remains blocked: no explicit yacht source; closest is Meridian hospitality.",
-  },
-];
+const CORE_LAYERS = [
+  ["01", "Ask A11-K", "A calm place to ask what matters, what is blocked, and what should happen next.", "violet", "/command/chat"],
+  ["02", "AI model status", "See which intelligence routes are connected, with no invented answers or hidden claims.", "mint", "/models"],
+  ["03", "Workflow status", "Understand what automation can do, what is waiting, and what still needs credentials.", "amber", "/workflows"],
+  ["04", "Decision preview", "Look at the upside, risk, approval, and undo path before anything consequential moves.", "coral", "/command/simulation"],
+  ["05", "Live proof layer", "Watch the system honestly: verified facts, clear placeholders, and no theatre.", "violet", "/status"],
+  ["06", "Human escalation", "Angel only gets the issues that truly need a human decision.", "mint", "/command/logs"],
+] as const;
 
 export default function HomePage() {
-  const publicBrands = BRAND_REGISTRY.filter((b) => b.visibility === "public");
-  const stealthBrands = BRAND_REGISTRY.filter((b) => b.visibility !== "public");
-
+  const publicBrands = BRAND_REGISTRY.filter((brand) => brand.visibility === "public").slice(0, 8);
   return (
     <>
       <PublicNav />
-      <main>
-        <section className="hero">
-          <div className="container">
-            <div className="row" style={{ marginBottom: "1rem" }}>
-              <StatusBadge status="placeholder" />
-              <span className="badge badge-stealth">engine core</span>
-              <span className="badge">mind-reply.com untouched</span>
+      <main className="bw-page">
+        <section className="ak-hero">
+          <div className="ak-hero-copy">
+            <div className="ak-kicker"><span className="ak-signal" /> A11-K / ENGINE CORE</div>
+            <h1>The engine behind everything you are building.</h1>
+            <p>The private command layer that helps manage AI models, workflows, brands, sites, and decisions — with a human in control.</p>
+            <div className="bw-hero-actions">
+              <Link href="/command" className="bw-button bw-button-primary">Open Command Center <span>↗</span></Link>
+              <a href="#system-map" className="bw-button bw-button-subtle">View System Map <span>↓</span></a>
             </div>
-            <h1>A11-K Engine Core</h1>
-            <p>
-              The command layer for MindReply models, workflows, brands, sites, and decisions.
-            </p>
-            <div className="hero-actions">
-              <Link href="/command/gate" className="btn btn-primary">
-                Request Owner Cockpit
-              </Link>
-              <Link href="/status" className="btn">
-                System Status
-              </Link>
-            </div>
+            <div className="ak-hero-trust"><StatusPill status="private">Private by design</StatusPill><span>Protected cockpit · honest status · owner approval</span></div>
+          </div>
+          <div className="ak-engine-visual" aria-label="A11-K engine core preview">
+            <div className="ak-orbit ak-orbit-one" /><div className="ak-orbit ak-orbit-two" /><div className="ak-orbit ak-orbit-three" />
+            <div className="ak-core-mark"><span>A11</span><small>K</small></div>
+            <div className="ak-signal-card ak-signal-card-one"><span className="ak-signal-icon">⌘</span><div><strong>Command layer</strong><small>private cockpit ready</small></div><StatusPill status="private" /></div>
+            <div className="ak-signal-card ak-signal-card-two"><span className="ak-signal-icon">◌</span><div><strong>Decision preview</strong><small>approval stays human</small></div><StatusPill status="safe" /></div>
+            <div className="ak-signal-card ak-signal-card-three"><span className="ak-signal-icon">✦</span><div><strong>Connected fleet</strong><small>different brands, one core</small></div><StatusPill status="ready" /></div>
           </div>
         </section>
 
-        <section className="section" id="system-map">
-          <div className="container">
-            <h2>System Map</h2>
-            <p className="lede">
-              MindReply stays public on mind-reply.com. A11-K is the engine core on a11-k.space — with
-              a protected operating cockpit.
-            </p>
-            <div className="grid grid-3">
-              {SECTIONS.map((s) => (
-                <article key={s.id} id={s.id} className="card">
-                  <h3>{s.title}</h3>
-                  <p>{s.body}</p>
-                </article>
-              ))}
-            </div>
+        <section className="ak-proof-strip"><div><span className="ak-strip-number">01</span><strong>See the whole system</strong><small>one calm view instead of scattered tools</small></div><div><span className="ak-strip-number">02</span><strong>Prepare the right move</strong><small>plans, previews, and safe fallbacks</small></div><div><span className="ak-strip-number">03</span><strong>Keep control</strong><small>nothing risky ships without approval</small></div></section>
+
+        <section className="bw-section" id="system-map">
+          <SectionIntro eyebrow="THE A11-K OPERATING SYSTEM" title="Simple on the surface. Powerful underneath." body="A11-K watches the connected ecosystem, translates technical reality into human language, and helps move the next useful thing forward." action={<A11KStamp label="A11-K Engine Core" href="/" />} />
+          <div className="bw-bento-grid">
+            {CORE_LAYERS.map(([number, title, body, tone, href], index) => <BentoCard key={title} tone={tone} className={index === 0 || index === 3 ? "ak-layer-wide" : "ak-layer-card"}><div className="ak-layer-number">{number}</div><h3>{title}</h3><p>{body}</p><Link href={href} className="bw-feature-link">Open layer ↗</Link></BentoCard>)}
           </div>
         </section>
 
-        <section className="section">
-          <div className="container">
-            <h2>Brand Fleet (public-safe)</h2>
-            <p className="lede">Only public-facing names and status labels. No private admin data.</p>
-            <div className="grid grid-3">
-              {publicBrands.map((b) => {
-                const wfLabel =
-                  b.workflowStatus === "active"
-                    ? "Operational"
-                    : b.workflowStatus === "blocked"
-                      ? "Blocked"
-                      : b.workflowStatus === "placeholder"
-                        ? "Wiring pending"
-                        : "Unknown";
-
-                return (
-                  <article key={b.slug} className="card card-glass">
-                    <div className="row" style={{ justifyContent: "space-between" }}>
-                      <div>
-                        <h3 style={{ margin: 0 }}>{b.name}</h3>
-                        <p className="mono faint" style={{ margin: "0.35rem 0 0" }}>
-                          {b.domain}
-                        </p>
-                      </div>
-                      <div className="stack" style={{ gap: "0.35rem" }}>
-                        <StatusBadge status={b.status} />
-                        <span className="badge">{wfLabel}</span>
-                      </div>
-                    </div>
-                    <p style={{ margin: "0.9rem 0 0" }}>
-                      Premium module connected to A11-K. {b.visibility === "public" ? "" : ""}
-                    </p>
-                  </article>
-                );
-              })}
-            </div>
-
-            <p className="faint" style={{ marginTop: "0.95rem" }}>
-              Stealth fleet is not listed publicly. Use the protected operating cockpit to view full mapping.
-            </p>
-          </div>
+        <section className="bw-section ak-fleet-section">
+          <SectionIntro eyebrow="THE CONNECTED FLEET" title="One core. Many distinct products." body="MindReply is the commercial brand. Tools keep their own personality. A11-K is the quiet, recognisable engine stamp that connects and governs them." />
+          <div className="ak-fleet-grid">{publicBrands.map((brand) => <div className="ak-fleet-card" key={brand.slug}><div className="ak-fleet-card-top"><span className="ak-fleet-symbol">{brand.name.slice(0, 1)}</span><StatusPill status={brand.status === "active" ? "ready" : "waiting"}>{brand.status === "active" ? "Connected" : "In progress"}</StatusPill></div><strong>{brand.name}</strong><small>{brand.domain}</small><A11KStamp label="Engine layer" compact href="/" /></div>)}</div>
+          <HumanNote><strong>The stamp is deliberately quiet.</strong> Each product stays itself. A11-K simply signals that the surface is connected to a safer operating core.</HumanNote>
         </section>
 
-        <section className="section">
-          <div className="container card">
-            <h2 style={{ marginTop: 0 }}>Open Command Center</h2>
-            <p className="muted">
-              Protected operating cockpit for brands, models, workflows, deployments, and next actions.
-            </p>
-            <Link href="/command/gate" className="btn btn-primary">
-              Request Owner Cockpit
-            </Link>
-          </div>
-        </section>
+        <section className="bw-section ak-final-cta"><div className="ak-final-panel"><div><div className="bw-eyebrow">THE NEXT MOVE</div><h2>Start with one clear question.</h2><p>Ask what is live, what is blocked, or what should happen next. A11-K turns the system into a conversation you can actually use.</p></div><Link href="/command" className="bw-button bw-button-primary">Open Ask A11-K <span>↗</span></Link></div></section>
       </main>
-      <footer className="footer">
-        <div className="container">
-          A11-K · engine for MindReply · public-safe landing · private command is stealth
-        </div>
-      </footer>
+      <footer className="bw-footer"><div className="bw-page bw-footer-inner"><span>A11-K Engine Core · the operating system behind the ecosystem.</span><A11KStamp label="A11-K certified engine layer" href="/" /></div></footer>
     </>
   );
 }

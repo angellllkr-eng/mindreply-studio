@@ -2,3 +2,28 @@
 > a11-k-core@0.1.0 dev
 > next dev -p 3111
 
+   ▲ Next.js 15.5.20
+   - Local:        http://localhost:3111
+   - Network:      http://100.79.158.4:3111
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.1s
+ ○ Compiling / ...
+ GET / 500 in 22342ms
+ GET / 500 in 51ms
+ GET / 500 in 224ms
+ GET / 500 in 43ms
+ ✓ Compiled /_error in 1733ms (481 modules)
+   Reload env: .env.local
+ ✓ Compiled in 886ms (481 modules)
+ ✓ Compiled in 2.4s (507 modules)
+ ✓ Compiled in 404ms (507 modules)
+ ✓ Compiled in 937ms (481 modules)
+ ✓ Compiled in 437ms (481 modules)
+ ✓ Compiled in 1840ms (481 modules)
+ ✓ Compiled in 3.7s (481 modules)
+ ✓ Compiled in 2.9s (481 modules)
+   Reload env: .env.local
+ ✓ Compiled in 1352ms (481 modules)
+ ✓ Compiled in 655ms (481 modules)

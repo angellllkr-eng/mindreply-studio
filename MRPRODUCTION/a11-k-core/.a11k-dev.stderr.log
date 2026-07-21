@@ -1,1 +1,64 @@
  ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+ ⨯ ./app/globals.css
+Module parse failed: Unexpected token (1:0)
+> :root {
+|   --bg: #07090d;
+|   --bg-elev: #0d1118;
+
+Import trace for requested module:
+./app/globals.css
+./app/layout.tsx
+ ⨯ ./app/globals.css
+Module parse failed: Unexpected token (1:0)
+> :root {
+|   --bg: #07090d;
+|   --bg-elev: #0d1118;
+
+Import trace for requested module:
+./app/globals.css
+./app/layout.tsx
+ ⨯ ./app/globals.css
+Module parse failed: Unexpected token (1:0)
+> :root {
+|   --bg: #07090d;
+|   --bg-elev: #0d1118;
+
+Import trace for requested module:
+./app/globals.css
+./app/layout.tsx
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\ANGEL\MRPRODUCTION\a11-k-core\.next\required-server-files.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\ANGEL\\MRPRODUCTION\\a11-k-core\\.next\\required-server-files.json'
+}

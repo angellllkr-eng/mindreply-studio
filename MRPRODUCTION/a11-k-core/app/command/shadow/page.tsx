@@ -5,7 +5,7 @@ import { SHADOW_TWINS } from "@/lib/shadow";
 export default function ShadowPage() {
   return (
     <CommandShell
-      title="Shadow Company"
+      title="Operating Twin"
       subtitle="Twins mirror structure, not private customer data."
       active="/command/shadow"
     >

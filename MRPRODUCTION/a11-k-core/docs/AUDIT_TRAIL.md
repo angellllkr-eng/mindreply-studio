@@ -1,4 +1,4 @@
-﻿# Audit Trail — A11-K
+# Audit Trail � A11-K
 
 ## Event shape
 
@@ -30,4 +30,4 @@ rate_limit_risk:
 | `model_route` | `/api/chat` | OpenAI Vercel AI SDK stream implemented |
 | `n8n_status` | Workflow hub | Blocked until credentials and test run |
 
-Never log raw tokens, provider keys, webhook secrets, private customer content, or private source contents.
+Never log raw tokens, provider keys, workflow connection secrets, private customer content, or private source contents.

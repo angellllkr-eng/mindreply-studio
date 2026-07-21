@@ -20,7 +20,7 @@ SiteTwin
 * proofState
 * blocker
 
-WorkflowTwin
+Workflow Status
 * id
 * name
 * status
@@ -28,7 +28,7 @@ WorkflowTwin
 * requiredCredentialsNames (protected cockpit)
 * ownerApprovalNeeded
 
-ModelTwin
+AI Model Status
 * id
 * provider
 * purpose
@@ -36,7 +36,7 @@ ModelTwin
 * fallbackActive
 * missingEnvNames (protected cockpit)
 
-DecisionTwin
+Decision Preview
 * id
 * action
 * affectedSystem

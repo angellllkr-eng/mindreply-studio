@@ -1,4 +1,4 @@
-﻿# Final Execution Audit — Wave 1 + AI SDK
+# Final Execution Audit � Wave 1 + AI SDK
 
 ## Decision
 - Base: existing `a11-k-core`.
@@ -12,7 +12,7 @@
 - Provider status and missing environment names are visible.
 - Real Vercel AI SDK OpenAI streaming route is wired for local/provider-configured use.
 - Honest provider fallback remains active when no provider is configured.
-- n8n, brand, action, cost, audit, rollback, escalation, shadow, and source surfaces/docs exist.
+- workflow automation, brand, action, cost, audit, rollback, escalation, shadow, and source surfaces/docs exist.
 - `LiveProofPanel` exists.
 - `.env.local` is ignored and no secret values are printed or committed.
 - The old embedded-token Git remote was replaced with a token-free URL.
@@ -25,7 +25,7 @@
 | Ask A11-K UI | active locally |
 | OpenAI AI SDK stream | active where local key is available |
 | Other provider routes | placeholder/status only |
-| n8n automation | blocked until credentials |
+| workflow automation automation | blocked until credentials |
 | Durable chat persistence | blocked until `DATABASE_URL` |
 | Production command auth | blocked until auth secret/token |
 | Live proof workflow data | placeholder until backend workflow is connected |
@@ -36,5 +36,5 @@
 
 ## Next 3 actions
 1. Configure production command auth and provider variables in the canonical Vercel project.
-2. Configure n8n only after confirming the production base URL and API key; keep workflows blocked otherwise.
+2. Configure workflow automation only after confirming the production base URL and API key; keep workflows blocked otherwise.
 3. Verify the canonical deployment and then attach/confirm `a11-k.space`; do not deploy a duplicate `a11k-command` project.

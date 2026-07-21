@@ -31,7 +31,7 @@ export type WorkflowRecord = {
   purpose: string;
   trigger: string;
   inputFields: string[];
-  webhookPath: string;
+  connectionPath: string;
   webhookStatus: FeatureStatus;
   requiredEnv: string[];
   dashboardAction: string;

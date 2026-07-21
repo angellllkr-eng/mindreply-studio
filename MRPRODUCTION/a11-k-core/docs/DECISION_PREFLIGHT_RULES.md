@@ -1,20 +1,20 @@
 # DECISION_PREFLIGHT_RULES (A11-K)
 
 ## Purpose
-Create a DecisionTwin **before** major actions.
+Create a Decision Preview **before** major actions.
 
 ## Major actions
 * deploy production
 * change DNS/domain mapping
 * publish new public page
 * delete/archive project
-* connect n8n production webhook
+* connect workflow automation production workflow connection
 * send customer message
 * use paid model/API heavily
 * expose a route publicly
 
-## DecisionTwin requirements
-Every DecisionTwin must include:
+## Decision Preview requirements
+Every Decision Preview must include:
 * action
 * reason
 * affected system

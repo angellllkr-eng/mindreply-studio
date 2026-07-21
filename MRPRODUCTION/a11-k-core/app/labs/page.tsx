@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const LABS = [
-  { name: "Shadow Company demos", status: "placeholder", note: "No private data" },
+  { name: "Operating Twin demos", status: "placeholder", note: "No private data" },
   { name: "Model fallback playground", status: "placeholder", note: "No fake completions" },
   { name: "Meridian hospitality sketch", status: "stealth", note: "Idea vault only" },
   { name: "Kratos-S / Aether-X", status: "stealth", note: "Not promoted publicly" },

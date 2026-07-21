@@ -6,11 +6,11 @@ export default function CommandWorkflowsPage() {
   const blocked = n8nBlockedBy();
   return (
     <CommandShell
-      title="n8n Workflows"
+      title="workflow automation Workflows"
       subtitle={
         blocked.length
           ? `Blocked credentials: ${blocked.join(", ")}`
-          : "Base n8n env present — webhooks still abstract"
+          : "Base workflow automation env present — workflow connections still abstract"
       }
       active="/command/workflows"
     >
@@ -19,7 +19,7 @@ export default function CommandWorkflowsPage() {
           <thead>
             <tr>
               <th>Workflow</th>
-              <th>Webhook</th>
+              <th>workflow connection</th>
               <th>Required env</th>
               <th>Action</th>
               <th>Status</th>
@@ -32,7 +32,7 @@ export default function CommandWorkflowsPage() {
                   <strong>{w.name}</strong>
                   <div className="faint">{w.purpose}</div>
                 </td>
-                <td className="mono">{w.webhookPath}</td>
+                <td className="mono">{w.connectionPath}</td>
                 <td className="mono">{w.requiredEnv.join(", ")}</td>
                 <td>{w.dashboardAction}</td>
                 <td>
@@ -44,7 +44,7 @@ export default function CommandWorkflowsPage() {
         </table>
       </div>
       <p className="faint" style={{ marginTop: "0.85rem" }}>
-        Safe trigger buttons stay disabled until webhook status is active. Secrets never rendered.
+        Safe trigger buttons stay disabled until workflow connection status is active. Secrets never rendered.
       </p>
     </CommandShell>
   );

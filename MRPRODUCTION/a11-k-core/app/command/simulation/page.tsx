@@ -12,16 +12,16 @@ const SIMS = [
   {
     action: "Enable live AI chat SDK calls",
     result: "Command chat streams real model output",
-    risk: "Cost / rate limits / data leakage if misconfigured",
+    risk: "Cost / usage limits / data leakage if misconfigured",
     approval: true,
     rollback: "Disable route; keep fallback mode",
   },
   {
-    action: "Activate public intake webhook",
+    action: "Activate public intake workflow connection",
     result: "Forms create support records",
     risk: "Spam / PII handling without storage policy",
     approval: true,
-    rollback: "Disable webhook path",
+    rollback: "Disable workflow connection path",
   },
 ];
 

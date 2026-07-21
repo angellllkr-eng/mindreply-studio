@@ -1,4 +1,4 @@
-﻿# Vercel Environment Setup — A11-K Core
+# Vercel Environment Setup � A11-K Core
 
 ## Canonical target
 
@@ -37,9 +37,9 @@ The current implementation uses `OPENAI_API_KEY` with `@ai-sdk/openai` and `stre
 | `OPENWEBUI_BASE_URL` | Placeholder | Local Open WebUI endpoint |
 | `OPENWEBUI_API_KEY` | Placeholder | Local Open WebUI authentication |
 | `DATABASE_URL` | Blocked | Durable chat history and audit persistence |
-| `N8N_BASE_URL` | Blocked | n8n API/workflow execution |
-| `N8N_API_KEY` | Blocked | n8n API authentication |
-| `N8N_WEBHOOK_SECRET` | Blocked | n8n webhook verification |
+| `N8N_BASE_URL` | Blocked | workflow automation API/workflow execution |
+| `N8N_API_KEY` | Blocked | workflow automation API authentication |
+| `N8N_WEBHOOK_SECRET` | Blocked | workflow automation workflow connection verification |
 | `VERCEL_TOKEN` | Placeholder | Vercel operations integration |
 | `GITHUB_TOKEN` | Placeholder | GitHub operations integration |
 | `BLOB_READ_WRITE_TOKEN` | Placeholder | Blob-backed files |
@@ -47,7 +47,7 @@ The current implementation uses `OPENAI_API_KEY` with `@ai-sdk/openai` and `stre
 
 ## Vercel dashboard location
 
-`Vercel → Projects → a11-k-core → Settings → Environment Variables`
+`Vercel ? Projects ? a11-k-core ? Settings ? Environment Variables`
 
 For a replacement or rotation:
 

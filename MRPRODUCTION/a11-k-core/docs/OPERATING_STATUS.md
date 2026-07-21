@@ -1,4 +1,4 @@
-﻿# Current Operating Status — A11-K Core
+# Current Operating Status � A11-K Core
 
 ## Active
 
@@ -14,14 +14,14 @@
 
 - Additional model provider routes.
 - LiveProof backend data.
-- n8n workflow executions.
+- workflow automation workflow executions.
 - Durable audit/chat persistence.
 - Full deployment/domain automation.
 
 ## Blocked
 
 - New production deployment required to activate latest code.
-- n8n credentials absent.
+- workflow automation credentials absent.
 - Database credentials absent.
 - Previous GitHub token must be revoked at account level.
 

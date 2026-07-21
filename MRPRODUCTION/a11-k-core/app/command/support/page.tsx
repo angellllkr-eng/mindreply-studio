@@ -5,7 +5,7 @@ export default function SupportPage() {
   return (
     <CommandShell
       title="Customer Support"
-      subtitle="Queue is abstract until public intake webhook is live."
+      subtitle="Queue is abstract until public intake workflow connection is live."
       active="/command/support"
     >
       <div className="card stack">

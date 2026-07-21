@@ -10,10 +10,10 @@ const DOCS = [
   { title: "Brand Registry", path: "docs/BRAND_REGISTRY.md" },
   { title: "Brand Idea Registry", path: "docs/BRAND_IDEA_REGISTRY.md" },
   { title: "Model Routing Map", path: "docs/MODEL_ROUTING_MAP.md" },
-  { title: "n8n Workflow Map", path: "docs/N8N_WORKFLOW_MAP.md" },
-  { title: "Autonomy Levels", path: "docs/AUTONOMY_LEVELS.md" },
-  { title: "Escalation Rules", path: "docs/ESCALATION_RULES.md" },
-  { title: "Shadow Company Model", path: "docs/SHADOW_COMPANY_MODEL.md" },
+  { title: "workflow automation Workflow Map", path: "docs/N8N_WORKFLOW_MAP.md" },
+  { title: "Action Safety Levels", path: "docs/AUTONOMY_LEVELS.md" },
+  { title: "When to Notify Angel", path: "docs/ESCALATION_RULES.md" },
+  { title: "Operating Twin Model", path: "docs/SHADOW_COMPANY_MODEL.md" },
   { title: "OneDrive Source Index", path: "docs/ONEDRIVE_SOURCE_INDEX.md" },
 ];
 

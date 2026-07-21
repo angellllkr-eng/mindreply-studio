@@ -42,7 +42,7 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     seoStatus: "unknown",
     workflowStatus: "placeholder",
     supportPath: "command/support",
-    nextAction: "Confirm live alias + SEO metadata",
+    nextAction: "Shape the secure connectivity framework; keep network claims strategy-only until verified",
   },
   {
     name: "Regex Forge",
@@ -55,8 +55,8 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     status: "active",
     seoStatus: "placeholder",
     workflowStatus: "placeholder",
-    supportPath: "tool intake → n8n regex_support",
-    nextAction: "Wire intake webhook placeholder",
+    supportPath: "tool intake → workflow automation regex_support",
+    nextAction: "Wire intake workflow connection placeholder",
   },
   {
     name: "SQL Studio",
@@ -69,7 +69,7 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     status: "active",
     seoStatus: "placeholder",
     workflowStatus: "placeholder",
-    supportPath: "tool intake → n8n sql_request",
+    supportPath: "tool intake → workflow automation sql_request",
     nextAction: "Wire SQL request workflow placeholder",
   },
   {
@@ -83,7 +83,7 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     status: "active",
     seoStatus: "placeholder",
     workflowStatus: "placeholder",
-    supportPath: "tool intake → n8n tutor_request",
+    supportPath: "tool intake → workflow automation tutor_request",
     nextAction: "Wire tutor request workflow",
   },
   {
@@ -97,7 +97,7 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     status: "active",
     seoStatus: "placeholder",
     workflowStatus: "placeholder",
-    supportPath: "tool intake → n8n code_lens_audit",
+    supportPath: "tool intake → workflow automation code_lens_audit",
     nextAction: "Wire audit workflow placeholder",
   },
   {
@@ -111,7 +111,7 @@ export const BRAND_REGISTRY: BrandRecord[] = [
     status: "active",
     seoStatus: "placeholder",
     workflowStatus: "placeholder",
-    supportPath: "lead capture → n8n sdr_lead_sequence",
+    supportPath: "lead capture → workflow automation sdr_lead_sequence",
     nextAction: "Keep sequences placeholder until workflow wiring is confirmed",
   },
   {
@@ -214,3 +214,4 @@ export const BRAND_REGISTRY: BrandRecord[] = [
       "No explicit yacht source found. Closest confirmed source is Meridian luxury hospitality.",
   },
 ];
+

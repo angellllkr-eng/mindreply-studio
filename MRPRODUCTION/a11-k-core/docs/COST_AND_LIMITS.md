@@ -1,11 +1,11 @@
-﻿# Cost and Limits — A11-K
+# Cost and Limits � A11-K
 
 | Area | State | Guardrail |
 |---|---|---|
 | OpenAI chat | Configured; telemetry unknown | Bounded output; avoid repeated loops |
 | Other providers | Placeholder | Do not call without a configured route |
 | Vercel deploy | Canonical project available | One intentional deploy after env changes |
-| n8n | Blocked | No production workflow calls without credentials/test proof |
+| workflow automation | Blocked | No production workflow calls without credentials/test proof |
 | Database | Blocked | No persistence claim until `DATABASE_URL` exists |
 
 ## Policy

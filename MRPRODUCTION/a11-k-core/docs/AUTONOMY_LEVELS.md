@@ -31,7 +31,7 @@
 * public/private exposure
 * delete/archive projects
 * send sensitive customer message
-* production webhook activation
+* production workflow connection activation
 * secret/env changes
 
 ## Default

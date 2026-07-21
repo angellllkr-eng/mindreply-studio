@@ -1,4 +1,4 @@
-﻿# Rollback Plan — A11-K
+# Rollback Plan � A11-K
 
 ## Production deployment
 
@@ -19,7 +19,7 @@
 - Revert the model route or return to honest status-only fallback.
 - Keep `allowActions: false` until action tooling has separate approvals.
 
-## n8n
+## workflow automation
 
 - Deactivate the workflow.
 - Remove compromised credentials.

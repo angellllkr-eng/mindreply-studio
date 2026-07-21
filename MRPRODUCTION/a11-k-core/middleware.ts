@@ -36,6 +36,13 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/api/command") ||
     pathname.startsWith("/api/chat");
 
+  const host = req.headers.get("host")?.split(":")[0].toLowerCase();
+  if (host === "brushworks.a11-k.space" && pathname === "/") {
+    const url = req.nextUrl.clone();
+    url.pathname = "/brushworks";
+    return NextResponse.rewrite(url);
+  }
+
   if (!isPrivate) return NextResponse.next();
 
   if (isGate) {
@@ -91,6 +98,8 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/command/:path*", "/api/command/:path*", "/api/chat/:path*"],
+  matcher: ["/", "/brushworks/:path*", "/command/:path*", "/api/command/:path*", "/api/chat/:path*"],
 };
+
+
 

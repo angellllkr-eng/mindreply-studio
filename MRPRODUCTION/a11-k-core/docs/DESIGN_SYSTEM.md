@@ -31,7 +31,7 @@ Premium, dark, executive UI.
 Public pages must never render:
 * env var names
 * API keys
-* webhook secret values
+* workflow connection secret values
 * internal tokens
 
 ## Robots/noindex

@@ -26,9 +26,9 @@ Generate a weekly/daily operating snapshot for Angel.
 * Next 3 actions
     * ranked and labeled with expected approval level
 
-## Scheduling (n8n)
-* If n8n is configured: run a scheduled job.
-* If n8n is not configured: output a placeholder mapping with required env/credential names only.
+## Scheduling (workflow automation)
+* If workflow automation is configured: run a scheduled job.
+* If workflow automation is not configured: output a placeholder mapping with required env/credential names only.
 
 ## Safety
-No secrets, no webhook secret values, no private logs, no customer data.
+No secrets, no workflow connection secret values, no private logs, no customer data.

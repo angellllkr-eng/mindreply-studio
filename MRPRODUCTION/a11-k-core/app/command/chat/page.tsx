@@ -2,458 +2,66 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CommandShell } from "@/components/CommandShell";
-import { StatusBadge } from "@/components/StatusBadge";
+import { A11KStamp } from "@/components/A11KStamp";
+import { StatusPill } from "@/components/Brushworks";
 
-type Provider = {
-  id: string;
-  label: string;
-  env: string[];
-  configured: boolean;
-  purpose: string;
-  status: "active" | "blocked" | "placeholder" | "unknown";
-};
+type Provider = { id: string; label: string; env: string[]; configured: boolean; purpose: string; status: "active" | "blocked" | "placeholder" | "unknown" };
+type ChatMessage = { id: string; role: "user" | "system" | "assistant"; content: string };
 
-type ChatMessage = {
-  id: string;
-  role: "user" | "system" | "assistant";
-  content: string;
-};
-
-const MODES = [
-  ["chief_orchestrator", "Chief Orchestrator"],
-  ["shipping_engineer", "Shipping Engineer"],
-  ["brand_architect", "Brand Architect"],
-  ["n8n_operator", "n8n Workflow Operator"],
-  ["devops_dns", "DevOps / DNS Operator"],
-  ["shadow_analyst", "Shadow Company Analyst"],
-  ["onedrive_miner", "OneDrive Idea Miner"],
-  ["customer_support", "Customer Support Agent"],
-  ["cost_limits", "Cost & Limits Analyst"],
-  ["audit_observability", "Audit / Observability Analyst"],
-  ["executive_summary", "Executive Summary"],
-] as const;
-
-const MODE_PURPOSES: Record<string, string> = {
-  chief_orchestrator: "coordinate safe next actions",
-  shipping_engineer: "code, deploy, verify",
-  brand_architect: "brand structure and copy",
-  n8n_operator: "workflows and escalation routes",
-  devops_dns: "domains, builds, and rollback",
-  shadow_analyst: "simulate decisions and risk",
-  onedrive_miner: "source-backed idea review",
-  customer_support: "support routing and escalation",
-  cost_limits: "rate-limit and spend awareness",
-  audit_observability: "trace actions and blockers",
-  executive_summary: "owner-facing brief",
-};
-
-const MODELS = [
-  ["auto", "Auto route"],
-  ["ai_gateway", "Vercel AI Gateway"],
-  ["openai", "OpenAI"],
-  ["anthropic", "Anthropic / Claude"],
-  ["xai", "xAI / Grok"],
-  ["google", "Google / Gemini"],
-  ["openwebui", "Open WebUI / local"],
-  ["fallback", "Fallback / status only"],
-] as const;
-
-const CONTEXTS = [
-  ["estate", "Whole estate"],
-  ["mindreply", "MindReply public site"],
-  ["a11k", "A11-K engine"],
-  ["brands", "Brand fleet"],
-  ["workflows", "n8n workflows"],
-  ["deployments", "Vercel / deployments"],
-  ["seo", "SEO / growth"],
-  ["ideas", "OneDrive ideas"],
-  ["shadow", "Shadow Company"],
-  ["support", "Support queue"],
-] as const;
-
-const BRANDS = [
-  ["a11-k", "A11-K"],
-  ["mindreply", "MindReply"],
-  ["sql-studio", "SQL Studio"],
-  ["code-lens", "Code Lens"],
-  ["sdr-agent", "SDR Agent"],
-  ["regex-forge", "Regex Forge"],
-  ["code-tutor", "Code Tutor"],
-  ["aurel", "AUREL"],
-  ["l402-skills", "L402 Skills"],
-  ["meridian", "Meridian (source-backed idea)"],
-] as const;
-
-const PRESETS = [
-  "What is broken right now?",
-  "What should I ship next?",
-  "Show blocked workflows",
-  "Check all sites",
-  "Show cost and rate-limit risks",
-  "Run decision preflight",
-  "Show what not to do",
-  "Review OneDrive ideas",
-];
-
-const FALLBACK_PROVIDERS: Provider[] = [
-  {
-    id: "ai_gateway",
-    label: "Vercel AI Gateway",
-    env: ["AI_GATEWAY_API_KEY"],
-    purpose: "central model routing",
-    configured: false,
-    status: "unknown",
-  },
-  {
-    id: "openai",
-    label: "OpenAI",
-    env: ["OPENAI_API_KEY"],
-    purpose: "general chat + shipping modes",
-    configured: false,
-    status: "unknown",
-  },
-  {
-    id: "anthropic",
-    label: "Anthropic / Claude",
-    env: ["ANTHROPIC_API_KEY"],
-    purpose: "code review + decision analysis",
-    configured: false,
-    status: "unknown",
-  },
-  {
-    id: "xai",
-    label: "xAI / Grok",
-    env: ["XAI_API_KEY"],
-    purpose: "shipping + executive summary",
-    configured: false,
-    status: "unknown",
-  },
-  {
-    id: "google",
-    label: "Google / Gemini",
-    env: ["GOOGLE_GENERATIVE_AI_API_KEY"],
-    purpose: "SEO + general reasoning",
-    configured: false,
-    status: "unknown",
-  },
-  {
-    id: "openwebui",
-    label: "Open WebUI / local",
-    env: ["OPENWEBUI_BASE_URL", "OPENWEBUI_API_KEY"],
-    purpose: "local fallback",
-    configured: false,
-    status: "unknown",
-  },
-];
-
-const INITIAL_MESSAGE: ChatMessage = {
-  id: "system-ready",
-  role: "system",
-  content:
-    "Ask A11-K is ready. It will not invent an AI answer. If no provider is configured, the workspace will show the exact missing environment names and remain useful for preparation, review, and safe preflight.",
-};
+const QUICK_PROMPTS = ["What should I do next?", "What is blocked?", "Check my sites", "Show my workflows", "Prepare a safe plan", "Explain this simply", "What should I not do?", "What needs my approval?"];
+const MODELS = [["auto", "Best available"], ["openai", "OpenAI"], ["fallback", "Safe fallback"]] as const;
+const MODES = [["chief_orchestrator", "Clear next move"], ["shipping_engineer", "Ship and verify"], ["brand_architect", "Brand and copy"], ["n8n_operator", "Workflow status"], ["devops_dns", "Sites and rollback"], ["shadow_analyst", "Decision preview"], ["cost_limits", "Cost and limits"]] as const;
+const CONTEXTS = [["estate", "Everything"], ["a11k", "A11-K engine"], ["brands", "Brand fleet"], ["workflows", "Workflows"], ["deployments", "Sites and deployments"], ["shadow", "Decisions"]] as const;
+const BRANDS = [["a11-k", "A11-K"], ["mindreply", "MindReply"], ["sql-studio", "SQL Studio"], ["code-lens", "Code Lens"], ["aurel", "AUREL"]] as const;
+const FALLBACK_PROVIDERS: Provider[] = [{ id: "openai", label: "OpenAI", env: ["OPENAI_API_KEY"], configured: false, purpose: "General chat and structured replies", status: "unknown" }, { id: "anthropic", label: "Claude", env: ["ANTHROPIC_API_KEY"], configured: false, purpose: "Reasoning, writing, careful review", status: "unknown" }, { id: "xai", label: "Grok", env: ["XAI_API_KEY"], configured: false, purpose: "Fast strategy and ideation", status: "unknown" }, { id: "google", label: "Gemini", env: ["GOOGLE_GENERATIVE_AI_API_KEY"], configured: false, purpose: "Research and broad context", status: "unknown" }];
+const INITIAL: ChatMessage = { id: "welcome", role: "system", content: "I�m here. Ask what matters and I�ll keep the answer clear, useful, and honest. Nothing risky moves without your approval." };
 
 export default function ChatPage() {
-  const [mode, setMode] = useState("chief_orchestrator");
   const [model, setModel] = useState("auto");
+  const [mode, setMode] = useState("chief_orchestrator");
   const [context, setContext] = useState("estate");
   const [brand, setBrand] = useState("a11-k");
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<ChatMessage[]>([INITIAL]);
   const [providers, setProviders] = useState<Provider[]>(FALLBACK_PROVIDERS);
   const [missingEnv, setMissingEnv] = useState<string[]>([]);
-  const [runtimeState, setRuntimeState] = useState<"active" | "blocked" | "placeholder">("placeholder");
-  const [runtimeMessage, setRuntimeMessage] = useState("Checking private runtime status...");
+  const [runtimeText, setRuntimeText] = useState("Private cockpit status is being checked.");
   const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-
-    fetch("/api/command/status", { cache: "no-store" })
-      .then(async (response) => {
-        const data = await response.json().catch(() => null);
-        if (!response.ok) {
-          throw new Error(data?.error || `Status request returned ${response.status}`);
-        }
-        return data;
-      })
-      .then((data) => {
-        if (!mounted) return;
-        setProviders(data.providers || FALLBACK_PROVIDERS);
-        setMissingEnv(data.missingEnv || []);
-        setRuntimeState(data.command?.authConfigured ? "active" : "blocked");
-        setRuntimeMessage(
-          data.command?.authConfigured
-            ? "Private command access is configured."
-            : "Command auth is not configured; production access remains blocked.",
-        );
-      })
-      .catch((error: Error) => {
-        if (!mounted) return;
-        setRuntimeState("blocked");
-        setRuntimeMessage(`Runtime status unavailable: ${error.message}`);
-        setMissingEnv([
-          "COMMAND_ACCESS_TOKEN",
-          "AUTH_SECRET",
-          "AI_GATEWAY_API_KEY",
-          "OPENAI_API_KEY",
-          "ANTHROPIC_API_KEY",
-          "XAI_API_KEY",
-          "GOOGLE_GENERATIVE_AI_API_KEY",
-          "DATABASE_URL",
-        ]);
-      });
-
-    return () => {
-      mounted = false;
-    };
+    fetch("/api/command/status", { cache: "no-store" }).then(async (response) => { const data = await response.json().catch(() => null); if (!response.ok) throw new Error(); return data; }).then((data) => { setProviders(data.providers || FALLBACK_PROVIDERS); setMissingEnv(data.missingEnv || []); setRuntimeText(data.command?.authConfigured ? "Private access is ready." : "Private command center is locked until access is confirmed."); }).catch(() => { setRuntimeText("Private command center is locked until access is confirmed."); setMissingEnv(["COMMAND_ACCESS_TOKEN", "AUTH_SECRET", "OPENAI_API_KEY", "N8N_API_KEY"]); });
   }, []);
 
-  const configuredProviders = providers.filter((provider) => provider.configured);
-  const selectedMode = MODE_PURPOSES[mode] || "safe operating assistance";
-  const selectedBrand = BRANDS.find(([id]) => id === brand)?.[1] || brand;
-  const selectedContext = CONTEXTS.find(([id]) => id === context)?.[1] || context;
-  const modelState = configuredProviders.length ? "active" : "blocked";
-  const modelStateLabel = configuredProviders.length ? "provider detected" : "fallback only";
+  const configured = providers.filter((provider) => provider.configured);
+  const visibleMissing = useMemo(() => [...new Set(missingEnv)], [missingEnv]);
+  const lens = `${MODES.find(([id]) => id === mode)?.[1]} � ${CONTEXTS.find(([id]) => id === context)?.[1]} � ${BRANDS.find(([id]) => id === brand)?.[1]}`;
 
-  const visibleMissingEnv = useMemo(() => {
-    const unique = new Set(missingEnv);
-    if (!configuredProviders.length) {
-      [
-        "AI_GATEWAY_API_KEY",
-        "OPENAI_API_KEY",
-        "ANTHROPIC_API_KEY",
-        "XAI_API_KEY",
-        "GOOGLE_GENERATIVE_AI_API_KEY",
-        "OPENWEBUI_BASE_URL",
-        "OPENWEBUI_API_KEY",
-      ].forEach((name) => unique.add(name));
-    }
-    return [...unique];
-  }, [configuredProviders.length, missingEnv]);
-
-  async function send() {
-    const text = message.trim();
-    if (!text || isSending) return;
-
-    setMessages((current) => [
-      ...current,
-      { id: `user-${Date.now()}`, role: "user", content: text },
-    ]);
-    setMessage("");
-    setIsSending(true);
-
+  async function send(text = message) {
+    const trimmed = text.trim(); if (!trimmed || isSending) return;
+    setMessages((current) => [...current, { id: `u-${Date.now()}`, role: "user", content: trimmed }]); setMessage(""); setIsSending(true);
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          message: text,
-          mode,
-          model,
-          context,
-          brand,
-          safeMode: true,
-          costMode: "normal",
-          allowActions: false,
-        }),
-      });
-      const data = await response.json().catch(() => null);
-      const content = data?.reply || data?.message || `Chat endpoint returned ${response.status}.`;
-      const missing = data?.missing?.length ? `\n\nMissing env names: ${data.missing.join(", ")}` : "";
-
-      setMessages((current) => [
-        ...current,
-        {
-          id: `system-${Date.now()}`,
-          role: data?.reply ? "assistant" : "system",
-          content: `${content}${missing}`,
-        },
-      ]);
-    } catch (error) {
-      setMessages((current) => [
-        ...current,
-        {
-          id: `error-${Date.now()}`,
-          role: "system",
-          content: `Chat request could not be completed: ${error instanceof Error ? error.message : "unknown error"}. No fake response was generated.`,
-        },
-      ]);
-    } finally {
-      setIsSending(false);
-    }
+      const response = await fetch("/api/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: trimmed, model, mode, context, brand, safeMode: true, allowActions: false }) });
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("text/plain") && response.body) {
+        const reader = response.body.getReader(); const decoder = new TextDecoder(); let answer = ""; const id = `a-${Date.now()}`;
+        setMessages((current) => [...current, { id, role: "assistant", content: "" }]);
+        while (true) { const { value, done } = await reader.read(); if (done) break; answer += decoder.decode(value, { stream: true }); setMessages((current) => current.map((item) => item.id === id ? { ...item, content: answer } : item)); }
+      } else {
+        const data = await response.json().catch(() => null); const answer = data?.message || data?.reply || "AI chat is ready, but the provider key is not connected in production yet."; setMessages((current) => [...current, { id: `s-${Date.now()}`, role: data?.reply ? "assistant" : "system", content: answer }]); if (data?.missing) setMissingEnv(data.missing);
+      }
+    } catch { setMessages((current) => [...current, { id: `e-${Date.now()}`, role: "system", content: "AI chat is ready, but the provider key is not connected in production yet. The safe fallback remains available." }]); } finally { setIsSending(false); }
   }
 
-  return (
-    <CommandShell
-      title="Ask A11-K"
-      subtitle="The chat is the command centre. Select the operating lens, context, and safe model route."
-      active="/command/chat"
-    >
-      <div className="chat-workspace">
-        <section className="chat-panel" aria-label="Ask A11-K chat">
-          <div className="chat-toolbar">
-            <div className="field">
-              <label htmlFor="model">Model route</label>
-              <select id="model" value={model} onChange={(event) => setModel(event.target.value)}>
-                {MODELS.map(([id, label]) => (
-                  <option key={id} value={id}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label htmlFor="mode">Operating mode</label>
-              <select id="mode" value={mode} onChange={(event) => setMode(event.target.value)}>
-                {MODES.map(([id, label]) => (
-                  <option key={id} value={id}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label htmlFor="context">Context</label>
-              <select id="context" value={context} onChange={(event) => setContext(event.target.value)}>
-                {CONTEXTS.map(([id, label]) => (
-                  <option key={id} value={id}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="row" style={{ justifyContent: "space-between" }}>
-            <div>
-              <span className="faint" style={{ fontSize: "0.7rem", letterSpacing: "0.08em" }}>
-                ACTIVE LENS
-              </span>
-              <div className="muted" style={{ marginTop: "0.2rem" }}>
-                {selectedMode} &middot; {selectedContext} &middot; {selectedBrand}
-              </div>
-            </div>
-            <StatusBadge status={modelState} />
-          </div>
-
-          <div className="chat-thread" aria-live="polite" aria-label="Chat messages">
-            {messages.map((item) => (
-              <div
-                key={item.id}
-                className={`chat-message ${item.role === "user" ? "chat-message-user" : ""} ${item.role === "system" ? "chat-message-system" : ""}`}
-              >
-                <span className="chat-message-label">
-                  {item.role === "user" ? "You" : item.role === "assistant" ? "A11-K" : "System"}
-                </span>
-                {item.content}
-              </div>
-            ))}
-            {isSending ? (
-              <div className="chat-message chat-message-system">
-                <span className="chat-message-label">System</span>
-                Checking configured provider route. No response is claimed until returned by the backend.
-              </div>
-            ) : null}
-          </div>
-
-          <div className="quick-prompts" aria-label="Quick prompts">
-            {PRESETS.map((preset) => (
-              <button key={preset} type="button" className="btn btn-ghost" onClick={() => setMessage(preset)}>
-                {preset}
-              </button>
-            ))}
-          </div>
-
-          <div className="chat-compose">
-            <div className="field">
-              <label htmlFor="message">Command</label>
-              <textarea
-                id="message"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-                placeholder="Ask what is broken, what should move next, or what needs approval..."
-              />
-            </div>
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <span className="muted" style={{ fontSize: "0.78rem" }}>
-                Safe mode on &middot; actions are suggestions only &middot; no fake AI output
-              </span>
-              <button type="button" className="btn btn-primary" onClick={send} disabled={isSending || !message.trim()}>
-                {isSending ? "Checking..." : "Ask A11-K"}
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <aside className="context-panel" aria-label="A11-K context panel">
-          <section className="context-card">
-            <h2>Runtime</h2>
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <strong>{runtimeState === "active" ? "Private runtime" : "Guarded runtime"}</strong>
-              <StatusBadge status={runtimeState} />
-            </div>
-            <p style={{ marginTop: "0.45rem" }}>{runtimeMessage}</p>
-          </section>
-
-          <section className="context-card">
-            <h2>Model status</h2>
-            <div className="row" style={{ justifyContent: "space-between", marginBottom: "0.6rem" }}>
-              <span className="muted">{modelStateLabel}</span>
-              <StatusBadge status={modelState} />
-            </div>
-            <div className="provider-list">
-              {providers.map((provider) => (
-                <div className="provider-row" key={provider.id}>
-                  <span className={`status-dot status-dot-${provider.status}`} aria-hidden="true" />
-                  <span>
-                    <strong>{provider.label}</strong>
-                    <small>{provider.env.join(" + ")}</small>
-                  </span>
-                  <span className="status-word">{provider.configured ? "yes" : provider.status}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="context-card">
-            <h2>Missing configuration names</h2>
-            <p style={{ marginBottom: "0.6rem" }}>Names only. Values are never rendered.</p>
-            <ul className="missing-env-list">
-              {visibleMissingEnv.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="context-card">
-            <h2>Next 3 actions</h2>
-            <ol className="muted" style={{ margin: 0, paddingLeft: "1.15rem", fontSize: "0.82rem" }}>
-              <li>Configure one approved provider route.</li>
-              <li>Set command auth before production access.</li>
-              <li>Keep deployment attempts paused while the platform limit is active.</li>
-            </ol>
-          </section>
-
-          <section className="context-card">
-            <h2>Cost / rate limits</h2>
-            <div className="command-note">
-              Model cost is unknown until a real provider route is wired. Deployment activity is guarded; do not repeat deploy attempts while a Vercel limit is active.
-            </div>
-          </section>
-
-          <section className="context-card">
-            <h2>Selected context</h2>
-            <p>
-              <strong style={{ color: "var(--ink)" }}>{selectedContext}</strong>
-              <br />
-              Brand: {selectedBrand}
-              <br />
-              Mode: {MODES.find(([id]) => id === mode)?.[1]}
-            </p>
-          </section>
-        </aside>
-      </div>
-    </CommandShell>
-  );
+  return <CommandShell title="Ask A11-K" subtitle="Your calm copilot for the whole ecosystem. Ask plainly; get the next useful move." active="/command/chat">
+    <div className="bw-chat-shell">
+      <section className="bw-chat-main" aria-label="Ask A11-K chat">
+        <div className="bw-chat-toolbar"><label>Model<select value={model} onChange={(event) => setModel(event.target.value)}>{MODELS.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label><label>How should it help?<select value={mode} onChange={(event) => setMode(event.target.value)}>{MODES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label><label>Look at<select value={context} onChange={(event) => setContext(event.target.value)}>{CONTEXTS.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label></div>
+        <div className="bw-row-between"><div><div className="bw-eyebrow">CURRENT LENS</div><div className="bw-lens-text">{lens}</div></div><StatusPill status={configured.length ? "live" : "waiting"}>{configured.length ? "AI connected" : "Provider waiting"}</StatusPill></div>
+        <div className="bw-chat-thread" aria-live="polite">{messages.map((item) => <div key={item.id} className={`bw-chat-message ${item.role === "user" ? "bw-chat-message-user" : ""} ${item.role === "system" ? "bw-chat-message-system" : ""}`}><span className="bw-chat-message-label">{item.role === "user" ? "You" : item.role === "assistant" ? "A11-K" : "A11-K / status"}</span>{item.content || "Thinking clearly�"}</div>)}{isSending ? <div className="bw-chat-message bw-chat-message-system"><span className="bw-chat-message-label">A11-K / status</span>Checking the safe provider route�</div> : null}</div>
+        <div className="bw-quick-prompts">{QUICK_PROMPTS.map((prompt) => <button key={prompt} type="button" className="bw-quick-prompt" onClick={() => { setMessage(prompt); void send(prompt); }}>{prompt}</button>)}</div>
+        <div className="bw-chat-composer"><textarea value={message} onChange={(event) => setMessage(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void send(); } }} placeholder="Ask what is live, what is blocked, or what should happen next�" /><div className="bw-chat-composer-bottom"><span className="bw-chat-helper">Safe mode is on � actions stay suggestions until you approve them</span><button type="button" className="bw-button bw-button-primary" disabled={isSending || !message.trim()} onClick={() => void send()}>{isSending ? "Thinking�" : "Ask A11-K ?"}</button></div></div>
+      </section>
+      <aside className="bw-chat-side"><div className="bw-side-card"><div className="bw-card-head"><h2>Right now</h2><StatusPill status={configured.length ? "live" : "waiting"}>{configured.length ? "Connected" : "Waiting"}</StatusPill></div><p>{runtimeText}</p></div><div className="bw-side-card"><h2>AI model status</h2>{providers.map((provider) => <div className="bw-provider-row" key={provider.id}><span className={`bw-provider-dot ${provider.configured ? "bw-provider-dot-live" : ""}`} /><span><strong>{provider.label}</strong><small>{provider.purpose}</small></span><span className="bw-provider-state">{provider.configured ? "Ready" : "Waiting"}</span></div>)}</div><div className="bw-side-card"><h2>What is waiting?</h2><p>{visibleMissing.length ? "A few connections are not set yet. The product stays honest and useful while they wait." : "Nothing missing is being reported."}</p>{visibleMissing.length ? <ul className="bw-missing-list">{visibleMissing.slice(0, 5).map((name) => <li key={name}>{name === "N8N_API_KEY" ? "Workflow automation is waiting for workflow automation credentials" : name === "COMMAND_ACCESS_TOKEN" ? "Command Center access is not confirmed in Vercel" : name === "OPENAI_API_KEY" ? "AI provider is not connected yet" : name}</li>)}</ul> : null}</div><div className="bw-side-card"><h2>Engine stamp</h2><p>A11-K is the core behind the connected fleet.</p><div style={{ marginTop: ".75rem" }}><A11KStamp label="A11-K Engine Core" href="/" /></div></div></aside>
+    </div>
+  </CommandShell>;
 }

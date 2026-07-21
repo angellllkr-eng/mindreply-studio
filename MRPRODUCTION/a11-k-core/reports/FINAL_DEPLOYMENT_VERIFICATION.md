@@ -1,4 +1,4 @@
-﻿# Production Verification — A11-K Core
+# Production Verification � A11-K Core
 
 ## Date
 2026-07-21
@@ -29,15 +29,15 @@ The current production deployment predates the latest gate hardening and environ
 
 ## Expected post-deploy behavior
 
-- Unauthorised `/command` → redirect to `/command/gate` with no secret in the URL.
-- Correct owner token → signed HttpOnly cookie and redirect to Ask A11-K.
-- Wrong token → 401.
-- Private APIs without cookie → 401 or configuration blocker response.
-- Private headers → `X-Robots-Tag: noindex, nofollow, noarchive`, `Cache-Control: private, no-store`.
-- Gated `/api/chat` with OpenAI configured → streamed provider response.
+- Unauthorised `/command` ? redirect to `/command/gate` with no secret in the URL.
+- Correct owner token ? signed HttpOnly cookie and redirect to Ask A11-K.
+- Wrong token ? 401.
+- Private APIs without cookie ? 401 or configuration blocker response.
+- Private headers ? `X-Robots-Tag: noindex, nofollow, noarchive`, `Cache-Control: private, no-store`.
+- Gated `/api/chat` with OpenAI configured ? streamed provider response.
 
 ## Not yet claimable
 
 - New code is not production-verified until the next canonical deployment is Ready.
-- n8n is not active: `N8N_BASE_URL` and `N8N_API_KEY` remain absent.
+- workflow automation is not active: `N8N_BASE_URL` and `N8N_API_KEY` remain absent.
 - Durable persistence is not active: `DATABASE_URL` remains absent.

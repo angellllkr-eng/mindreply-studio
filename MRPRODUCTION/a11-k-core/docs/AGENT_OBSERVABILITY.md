@@ -30,7 +30,7 @@ Record events with:
 ## No secrets rule
 Never log:
 * API keys
-* webhook secret values
+* workflow connection secret values
 * Authorization headers
 * private customer messages
 

@@ -1,4 +1,4 @@
-﻿# Model Routing Map — A11-K
+# Model Routing Map � A11-K
 
 ## Provider truth
 
@@ -18,10 +18,10 @@
 | Chief Orchestrator | Coordinate safe actions | OpenAI | Status-only preparation |
 | Shipping Engineer | Code/build/deploy/verify | OpenAI or Anthropic | Build checklist |
 | Brand Architect | Positioning/copy | OpenAI or Google | Source-backed draft |
-| n8n Operator | Workflow mapping | OpenAI or Anthropic | Placeholder map |
+| workflow automation Operator | Workflow mapping | OpenAI or Anthropic | Placeholder map |
 | DevOps/DNS Operator | Access/deployment risk | OpenAI | Manual preflight |
 | Shadow Analyst | Simulation/risk | OpenAI or Anthropic | Qualitative twin |
 | Cost & Limits Analyst | Spend/rate awareness | OpenAI | Rule warnings |
 | Audit Analyst | Traceability | OpenAI | Markdown audit |
 
-AI output is advisory. Production deploys, DNS, secrets, billing, private/public changes, customer-sensitive messages, and production n8n activation require owner approval and rollback paths.
+AI output is advisory. Production deploys, DNS, secrets, billing, private/public changes, customer-sensitive messages, and production workflow automation activation require owner approval and rollback paths.

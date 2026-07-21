@@ -26,8 +26,8 @@ A private AI operating twin that mirrors the estate and simulates likely outcome
 * last verified (abstract)
 * blocker
 
-### WorkflowTwin
-* n8n workflow name
+### Workflow Status
+* workflow automation workflow name
 * trigger (abstract)
 * input/output (abstract)
 * status: active/placeholder/blocked
@@ -36,7 +36,7 @@ A private AI operating twin that mirrors the estate and simulates likely outcome
 * last known state
 * owner action needed
 
-### ModelTwin
+### AI Model Status
 * provider
 * model purpose
 * configured yes/no
@@ -53,7 +53,7 @@ A private AI operating twin that mirrors the estate and simulates likely outcome
 * recommended route
 * escalation needed (yes/no)
 
-### DecisionTwin
+### Decision Preview
 * proposed action
 * affected brand/site/workflow
 * expected benefit

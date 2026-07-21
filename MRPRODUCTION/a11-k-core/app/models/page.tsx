@@ -5,7 +5,7 @@ import { CHAT_MODES, getProviders, modelFallbackActive } from "@/lib/models";
 
 export const metadata: Metadata = {
   title: "Models",
-  description: "Model router status — configured yes/no by env presence only.",
+  description: "routing layer status — configured yes/no by env presence only.",
 };
 
 export default function ModelsPage() {
@@ -20,7 +20,7 @@ export default function ModelsPage() {
       <main className="section">
         <div className="container stack">
           <div>
-            <h1 style={{ margin: 0 }}>Model Router</h1>
+            <h1 style={{ margin: 0 }}>routing layer</h1>
             <p className="muted">
               Shows configuration presence only. Never prints secret values. No fake AI responses.
             </p>
