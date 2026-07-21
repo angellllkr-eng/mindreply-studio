@@ -1,0 +1,16 @@
+﻿# Feature Flags
+
+commandActions=true
+liveAIResponses=false
+n8nProductionWebhooks=false
+publicChatWidget=false
+unapolageticShop=false
+shopifyProductPublish=false
+supplierOrderRouting=false
+cosmeticProductPublishing=false
+autoTranslations=false
+autoDeploy=false
+costWarnings=true
+ownerApprovalRequiredForDns=true
+ownerApprovalRequiredForAds=true
+ownerApprovalRequiredForCosmetics=true

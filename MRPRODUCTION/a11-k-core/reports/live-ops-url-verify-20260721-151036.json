@@ -1,0 +1,52 @@
+﻿[
+    {
+        "url":  "https://www.mind-reply.com/",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://a11-k.space/",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://a11-k.space/command",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://brushworks.a11-k.space/",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://sql.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (404) Not Found."
+    },
+    {
+        "url":  "https://tools.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (404) Not Found."
+    },
+    {
+        "url":  "https://labs.a11-k.space/",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (404) Not Found."
+    },
+    {
+        "url":  "https://unapolagetic.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (404) Not Found."
+    },
+    {
+        "url":  "https://shop.unapolagetic.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The underlying connection was closed: An unexpected error occurred on a send."
+    },
+    {
+        "url":  "https://ops.unapolagetic.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The underlying connection was closed: An unexpected error occurred on a send."
+    }
+]

@@ -1,18 +1,20 @@
-# Cost and Limits — A11-K
+ï»¿# Cost and Limits Guard
 
-| Area | State | Guardrail |
-|---|---|---|
-| OpenAI chat | Configured; telemetry unknown | Bounded output; avoid repeated loops |
-| Other providers | Placeholder | Do not call without a configured route |
-| Vercel deploy | Canonical project available | One intentional deploy after env changes |
-| workflow automation | Blocked | No production workflow calls without credentials/test proof |
-| Database | Blocked | No persistence claim until `DATABASE_URL` exists |
+Track:
+- Vercel deployment limit
+- model usage costs
+- workflow execution risk
+- Shopify/app monthly cost
+- translation cost
+- supplier/order risk
+- ad spend
+- repeated deploys
 
-## Policy
-
-- Use a small model for summaries and status classification.
-- Use the strongest model for architecture, difficult code review, and final decisions.
-- Batch site checks and cache safe status checks.
-- Stop deployment attempts if Vercel reports a limit.
-- Treat unknown provider cost/rate data as `unknown`, not zero.
-- Require rollback and owner approval for risky changes.
+Rules:
+- batch checks
+- cache status
+- use cheap model for summaries
+- strongest model only for architecture/code/compliance/final decisions
+- no paid apps without approval
+- no ads without approval
+- no repeated failed deploy retries
