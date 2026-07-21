@@ -1,0 +1,70 @@
+﻿name: AUREL Trend Intel Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+      - "renew/**"
+      - "fix/**"
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  build_and_verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile || pnpm install
+          elif [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
+
+      - name: Build
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm build
+          else
+            npm run build
+          fi
+
+      - name: Verify live command URLs
+        continue-on-error: true
+        run: |
+          mkdir -p reports
+          echo "# AUREL Trend Intel Verify" > reports/trend-intel-verify.md
+          urls=(
+            "https://www.mind-reply.com/"
+            "https://a11-k.space/command"
+            "https://a11-k.space/api/command/trends"
+            "https://sql.mind-reply.com/"
+          )
+          for url in "${urls[@]}"; do
+            code=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 20 "$url" || echo "ERROR")
+            echo "- $url -> $code" | tee -a reports/trend-intel-verify.md
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aurel-trend-intel-verify
+          path: reports/
