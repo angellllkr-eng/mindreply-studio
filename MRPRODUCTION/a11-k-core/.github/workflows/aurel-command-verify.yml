@@ -1,0 +1,54 @@
+﻿name: AUREL Command Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+      - "fix/**"
+      - "renew/**"
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            corepack enable
+            pnpm install --frozen-lockfile || pnpm install
+          elif [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
+
+      - name: Build
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm build
+          else
+            npm run build
+          fi
+
+      - name: Verify command files
+        run: |
+          test -f src/pages/Command.tsx
+          test -f src/components/AurelCommandCards.tsx
+          test -f src/data/aurelRegistry.ts
+          grep -R "/command" src/App.tsx
+          echo "AUREL command files verified"

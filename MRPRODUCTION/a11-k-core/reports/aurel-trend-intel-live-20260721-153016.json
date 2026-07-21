@@ -1,0 +1,22 @@
+﻿[
+    {
+        "url":  "https://www.mind-reply.com/",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://a11-k.space/command",
+        "status":  200,
+        "note":  "responded"
+    },
+    {
+        "url":  "https://a11-k.space/api/command/trends",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (401) Unauthorized."
+    },
+    {
+        "url":  "https://sql.mind-reply.com/",
+        "status":  "ERROR",
+        "note":  "The remote server returned an error: (404) Not Found."
+    }
+]
