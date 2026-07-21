@@ -1,0 +1,93 @@
+﻿name: AUREL Security and Site Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+      - "fix/**"
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: read
+  actions: read
+
+jobs:
+  build_audit_and_verify:
+    name: Build, audit, and verify sites
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile || pnpm install
+          elif [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
+
+      - name: Build
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm build
+          else
+            npm run build
+          fi
+
+      - name: Dependency audit
+        continue-on-error: true
+        run: |
+          mkdir -p reports
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm audit --json > reports/ci-pnpm-audit.json || true
+          elif [ -f package-lock.json ]; then
+            npm audit --json > reports/ci-npm-audit.json || true
+          fi
+
+      - name: Verify public URLs
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p reports
+          URLS=(
+            "https://www.mind-reply.com/"
+            "https://mind-reply.com/"
+            "https://a11-k.space/"
+            "https://a11-k.space/command"
+            "https://brushworks.a11-k.space/"
+            "https://sql.mind-reply.com/"
+            "https://tools.mind-reply.com/"
+            "https://labs.a11-k.space/"
+            "https://unapolagetic.mind-reply.com/"
+            "https://shop.unapolagetic.mind-reply.com/"
+            "https://ops.unapolagetic.mind-reply.com/"
+          )
+
+          echo "# Site Verification" > reports/site-verify.md
+          for url in "${URLS[@]}"; do
+            code=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 20 "$url" || echo "ERROR")
+            echo "- $url -> $code" | tee -a reports/site-verify.md
+          done
+
+      - name: Upload verification reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aurel-security-site-reports
+          path: reports/

@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { signCommandCookie } from "@/lib/gate";
 
@@ -98,7 +98,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/brushworks/:path*", "/command/:path*", "/api/command/:path*", "/api/chat/:path*"],
+  matcher: ["/", "/brushworks/:path*", "/labs/:path*", "/tools/:path*", "/command/:path*", "/api/command/:path*", "/api/chat/:path*"],
 };
 
 

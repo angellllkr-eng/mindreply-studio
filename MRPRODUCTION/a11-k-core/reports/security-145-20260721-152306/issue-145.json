@@ -1,0 +1,8 @@
+﻿cmd.exe : GraphQL: Could not resolve to an issue or pull request with the number of 145. (repository.issue)
+At line:4 char:5
++     cmd.exe /c "$Command" *>&1 | Tee-Object -FilePath $OutFile
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (GraphQL: Could ...pository.issue):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
