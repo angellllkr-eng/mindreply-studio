@@ -1,30 +1,73 @@
-import Link from "next/link";
-import { CommandShell } from "@/components/CommandShell";
-import { BentoCard, HumanNote, MetricCard, NextAction, SectionIntro, StatusPill } from "@/components/Brushworks";
-import { ACTION_QUEUE } from "@/lib/shadow";
-import { getProviders } from "@/lib/models";
-import { WORKFLOWS } from "@/lib/workflows";
-
-export default function CommandOverviewPage() {
-  const providers = getProviders();
-  const connected = providers.filter((provider) => provider.configured).length;
-  const blockedWorkflows = WORKFLOWS.filter((workflow) => workflow.status === "blocked").length;
-  const waitingActions = ACTION_QUEUE.filter((action) => action.status === "blocked" || action.status === "placeholder").length;
+﻿export default function CommandPage() {
+  const cards = [
+    ["Model Status", "Provider keys checked by env names only. No secrets shown."],
+    ["Brand Registry", "AUREL, A11-K, MindReply, Brushworks, UNAPOLAGETIC."],
+    ["Workflow Status", "Workflow automation mapped without exposing webhook URLs."],
+    ["Action Queue", "Protect /command, connect providers, verify routes, wire workflows."],
+    ["Cost & Limits Guard", "Stops repeated deploys, model loops, paid app surprises, and ad spend."],
+    ["Audit Log", "Important actions should log safe summaries."],
+    ["Rollback Plan", "Every risky action needs an undo path."],
+    ["Live Proof", "Placeholder — backend not configured. No fake live data."],
+    ["UNAPOLAGETIC", "Fashion/accessories first. Cosmetics blocked until compliance approval."],
+  ];
 
   return (
-    <CommandShell title="Good morning, Angel." subtitle="Here is the useful version of your system: what is live, what is waiting, and the next safe move." active="/command">
-      <div className="ak-command-hero">
-        <div><div className="bw-eyebrow">YOUR OPERATING VIEW / 01</div><h2>See the signal. Choose the move.</h2><p>A11-K keeps the whole estate visible without pretending that placeholders are live.</p></div>
-        <Link href="/command/chat" className="bw-button bw-button-primary">Ask A11-K <span>?</span></Link>
-      </div>
+    <main className="min-h-screen bg-[#05070b] text-white">
+      <section className="mx-auto max-w-7xl px-5 py-8">
+        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <p className="text-xs uppercase tracking-[0.35em] text-[#5ee1ff]">Private owner system</p>
+          <h1 className="mt-3 text-4xl font-semibold">Ask AUREL</h1>
+          <p className="mt-2 text-white/60">Powered by A11-K. Decisions, workflows, models, sites, actions, proof, rollback.</p>
 
-      <div className="ak-command-metrics"><MetricCard label="Command center" value="Locked" detail="Private access is protected" status="private" /><MetricCard label="AI providers" value={`${connected}/${providers.length}`} detail={connected ? "At least one route is connected" : "AI provider not connected yet"} status={connected ? "live" : "waiting"} /><MetricCard label="Workflow status" value={blockedWorkflows ? "Waiting" : "Ready"} detail={blockedWorkflows ? "Automation is waiting for credentials" : "Workflow layer is available"} status={blockedWorkflows ? "waiting" : "ready"} /><MetricCard label="Next actions" value={`${waitingActions}`} detail="Items need a decision or a dependency" status="review" /></div>
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            <select className="rounded-2xl border border-white/10 bg-black/50 p-3">
+              <option>Auto</option><option>Claude</option><option>Grok</option><option>Gemini</option><option>OpenAI</option><option>Fallback Safe Mode</option>
+            </select>
+            <select className="rounded-2xl border border-white/10 bg-black/50 p-3">
+              <option>Chief Orchestrator</option><option>Shipping Engineer</option><option>Brand Architect</option><option>Workflow Operator</option><option>Commerce Operator</option>
+            </select>
+            <select className="rounded-2xl border border-white/10 bg-black/50 p-3">
+              <option>Whole Estate</option><option>AUREL</option><option>A11-K</option><option>MindReply</option><option>Brushworks</option><option>UNAPOLAGETIC</option>
+            </select>
+          </div>
+        </div>
 
-      <section className="bw-section ak-command-section"><SectionIntro eyebrow="START HERE" title="The cockpit in one glance" body="Every card answers what it is, why it matters, and where to go next." /><div className="bw-bento-grid"><BentoCard tone="violet" className="ak-command-card-wide"><div className="ak-command-card-top"><StatusPill status="ready">Your copilot</StatusPill><span className="ak-card-index">01</span></div><h3>Ask A11-K</h3><p>Ask what to do next, what is blocked, which sites need attention, or how to explain the system simply.</p><Link href="/command/chat" className="bw-button bw-button-primary">Open chat ?</Link></BentoCard><BentoCard className="ak-command-card"><div className="ak-command-card-top"><StatusPill status="waiting">Waiting</StatusPill><span className="ak-card-index">02</span></div><h3>Workflow status</h3><p>Automation is ready in the interface, but workflow automation credentials are not connected yet.</p><Link href="/command/workflows" className="bw-feature-link">See workflows ?</Link></BentoCard><BentoCard tone="mint" className="ak-command-card"><div className="ak-command-card-top"><StatusPill status="safe">Protected</StatusPill><span className="ak-card-index">03</span></div><h3>Live proof layer</h3><p>Verified facts stay separate from placeholders. No fake health, deployment, or AI claims.</p><Link href="/status" className="bw-feature-link">View proof ?</Link></BentoCard></div></section>
+        <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_360px]">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <div className="min-h-[360px] rounded-3xl border border-white/10 bg-black/30 p-4">
+              <p className="text-sm text-white/70">
+                Command UI active. AI chat is ready, but provider wiring must be verified before showing live responses.
+              </p>
+              <p className="mt-3 text-sm text-[#e4c06f]">
+                If no provider key is connected: “AI chat is ready, but no provider key is connected yet.”
+              </p>
+            </div>
+            <div className="mt-4 flex gap-2">
+              <input className="flex-1 rounded-2xl border border-white/10 bg-black/50 px-4 py-3" placeholder="Ask AUREL what to ship, fix, or block..." />
+              <button className="rounded-2xl bg-[#e4c06f] px-5 py-3 font-semibold text-black">Send</button>
+            </div>
+          </div>
 
-      <section className="ak-command-next"><div><div className="bw-eyebrow">NEXT SAFE MOVES</div><h2>What deserves attention?</h2></div><div className="ak-next-grid"><NextAction title="Ask what should move next" body="Let the copilot turn the whole estate into one clear next action." href="/command/chat" status="ready" /><NextAction title="Review the blocked workflows" body="Automation is waiting for workflow automation credentials; the UI stays honest and usable." href="/command/workflows" status="waiting" /><NextAction title="Preview a risky decision" body="See the upside, risk, approval, and undo path before acting." href="/command/simulation" status="review" /></div></section>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+            <h2 className="text-xl font-semibold">Context Panel</h2>
+            <ul className="mt-4 space-y-2 text-sm text-white/65">
+              <li>• Current blockers: provider keys, protection, workflow wiring.</li>
+              <li>• Next: protect /command, connect model keys, verify live route.</li>
+              <li>• Do not fake live automation.</li>
+              <li>• Rollback path required before risky production changes.</li>
+            </ul>
+          </div>
+        </div>
 
-      <HumanNote><strong>Safe by default.</strong> A11-K can prepare plans and explain the system. Deployments, domains, secrets, workflows, and public/private changes remain under your approval.</HumanNote>
-    </CommandShell>
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {cards.map(([title, body]) => (
+            <div key={title} className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.025] p-5">
+              <h3 className="font-semibold">{title}</h3>
+              <p className="mt-2 text-sm text-white/65">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
