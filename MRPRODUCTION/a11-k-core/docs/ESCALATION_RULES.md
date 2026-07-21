@@ -1,40 +1,42 @@
-# ESCALATION_RULES (A11-K)
-
-## Purpose
-Escalate to Angel **only** when a real operational risk exists (production down, boundary risk, secrets/env missing for production, or destructive/public-risk actions).
+﻿# Escalation Rules — A11-K
 
 ## Severity
-* **Critical**
-    * Production site down
-    * Public/private leakage risk
-    * Payment/billing issue
-    * DNS/domain failure
-    * Deployment repeatedly failing
-    * Secret/env missing for production
-    * Destructive action needed
-* **High**
-    * Customer support urgency high
-    * Angry customer
-    * Legal/contract/billing message
-    * Major SEO/indexing issue
-    * Broken intake/contact form
-    * Workflow failure affecting users
-* **Medium**
-    * Stale project
-    * Missing metadata
-    * Workflow placeholder
-    * Brand page needs content
-    * Model provider unavailable
-* **Low**
-    * Copy polish
-    * Design improvement
-    * Optional SEO page
-    * Experiment/lab idea
 
-## Escalation message format (exact)
+### Critical
+- Production site down
+- Public/private data exposure risk
+- DNS/domain failure
+- Repeated deployment failure
+- Billing/payment issue
+- Missing production secret blocking a required path
+- Destructive action required
+- Credential/token compromise
 
-Plain Text
+### High
+- Urgent customer issue
+- Angry/legal/billing message
+- Broken intake/contact form
+- Workflow failure affecting users
+- Public page exposes a private route
+- Dangerous cost/rate-limit condition
 
+### Medium
+- Stale project
+- Missing metadata
+- Workflow placeholder
+- Provider unavailable with safe fallback
+- Non-critical platform limit
+
+### Low
+- Copy polish
+- Optional SEO
+- Design improvement
+- Experiment idea
+
+## Message format
+
+```text
+ESCALATION
 Severity: Critical / High / Medium / Low
 Affected system:
 What happened:
@@ -43,23 +45,7 @@ Recommended action:
 What Angel must do:
 Safe fallback active: yes/no
 Blocked by:
+Rollback path:
+```
 
-## Escalate only for
-* production site down
-* DNS/domain failure
-* Vercel deploy limit/blocker
-* deployment failing repeatedly
-* missing production secret
-* customer urgency high
-* angry/legal/billing/customer-risk message
-* private data exposure risk
-* destructive action needed
-* payment/plan issue
-* public/private boundary risk
-
-## Do not interrupt for
-* normal progress
-* optional copy polish
-* minor design tweaks
-* successful builds
-* low-priority idea notes
+Escalate only real production, security, customer, credential, cost, DNS, or destructive-action risk. Do not interrupt for ordinary progress or successful builds.

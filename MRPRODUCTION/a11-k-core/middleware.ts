@@ -1,14 +1,34 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { signCommandCookie } from "@/lib/gate";
+
+const PRIVATE_HEADERS = {
+  "X-Robots-Tag": "noindex, nofollow, noarchive",
+  "Cache-Control": "private, no-store",
+  "Referrer-Policy": "no-referrer",
+};
+
+function applyPrivateHeaders(response: NextResponse) {
+  Object.entries(PRIVATE_HEADERS).forEach(([name, value]) => response.headers.set(name, value));
+  return response;
+}
+
+function safeNextPath(pathname: string) {
+  return pathname.startsWith("/") && !pathname.startsWith("//") ? pathname : "/command";
+}
 
 /**
- * Stealth protection for private command surfaces.
- * - Always noindex private paths
- * - If COMMAND_ACCESS_TOKEN is set, require cookie/header match
- * - If no gate env is configured, allow local scaffold but stamp X-A11K-Gate: open-scaffold
- *   (document as blocked for production until auth env present)
+ * Production-safe protection for the private command centre and its APIs.
+ *
+ * Required in production:
+ * - COMMAND_ACCESS_TOKEN: owner-provided shared gate token
+ * - AUTH_SECRET: signing secret for the HttpOnly gate cookie
+ *
+ * The raw token is accepted only in the dedicated gate POST or an explicit
+ * private request header. Browser sessions use a signed cookie. Query-string
+ * tokens are deliberately not accepted because URLs leak into history/logs.
  */
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isGate = pathname === "/command/gate" || pathname.startsWith("/api/command/gate");
   const isPrivate =
@@ -16,74 +36,61 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/api/command") ||
     pathname.startsWith("/api/chat");
 
-  if (!isPrivate) {
-    return NextResponse.next();
-  }
+  if (!isPrivate) return NextResponse.next();
 
-  const res = NextResponse.next();
-  res.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
-  res.headers.set("Cache-Control", "private, no-store");
-  res.headers.set("Referrer-Policy", "no-referrer");
-
-  // Gate page + gate API must remain reachable when locked.
   if (isGate) {
-    res.headers.set("X-A11K-Gate", "gate-surface");
-    return res;
+    return applyPrivateHeaders(NextResponse.next());
   }
 
-  const token = process.env.COMMAND_ACCESS_TOKEN;
-  if (!token || token.length === 0) {
-    // Production-safe default: never expose /command or private APIs without an access gate.
-    const isProd = process.env.NODE_ENV === "production";
-    if (isProd) {
+  const token = process.env.COMMAND_ACCESS_TOKEN?.trim();
+  const authSecret = process.env.AUTH_SECRET?.trim();
+  const gateConfigured = Boolean(token && authSecret);
+
+  if (!gateConfigured) {
+    if (process.env.NODE_ENV === "production") {
       if (pathname.startsWith("/api/")) {
-        return new NextResponse(JSON.stringify({ error: "blocked", status: "no-command-access-configured" }), {
-          status: 503,
-          headers: {
-            "content-type": "application/json",
-            "X-Robots-Tag": "noindex, nofollow",
-          },
-        });
+        return applyPrivateHeaders(
+          NextResponse.json(
+            { error: "blocked", status: "no-command-access-configured" },
+            { status: 503 },
+          ),
+        );
       }
-      return new NextResponse("Forbidden", {
-        status: 403,
-        headers: {
-          "X-Robots-Tag": "noindex, nofollow",
-          "Cache-Control": "no-store",
-        },
-      });
+      return applyPrivateHeaders(
+        new NextResponse("Forbidden", { status: 403 }),
+      );
     }
 
-    // Non-production (local/dev): allow scaffold but still noindex.
-    res.headers.set("X-A11K-Gate", "open-scaffold");
-    return res;
+    return applyPrivateHeaders(
+      NextResponse.next({ headers: { "X-A11K-Gate": "open-scaffold" } }),
+    );
   }
 
-  const cookie = req.cookies.get("a11k_command_gate")?.value;
-  const header = req.headers.get("x-a11k-command-token");
-  const q = req.nextUrl.searchParams.get("gate");
-  const provided = cookie || header || q || "";
+  const expectedCookie = await signCommandCookie(token!, authSecret!);
+  const cookie = req.cookies.get("a11k_command_gate")?.value || "";
+  const header = req.headers.get("x-a11k-command-token") || "";
+  const authorized = cookie === expectedCookie || header === token;
 
-  if (provided !== token) {
+  if (!authorized) {
     if (pathname.startsWith("/api/")) {
-      return new NextResponse(JSON.stringify({ error: "unauthorized", status: "blocked" }), {
-        status: 401,
-        headers: {
-          "content-type": "application/json",
-          "X-Robots-Tag": "noindex, nofollow",
-        },
-      });
+      return applyPrivateHeaders(
+        NextResponse.json({ error: "unauthorized", status: "blocked" }, { status: 401 }),
+      );
     }
+
     const url = req.nextUrl.clone();
     url.pathname = "/command/gate";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    url.search = "";
+    url.searchParams.set("next", safeNextPath(pathname));
+    return applyPrivateHeaders(NextResponse.redirect(url));
   }
 
-  res.headers.set("X-A11K-Gate", "locked");
-  return res;
+  const response = applyPrivateHeaders(NextResponse.next());
+  response.headers.set("X-A11K-Gate", "locked");
+  return response;
 }
 
 export const config = {
   matcher: ["/command/:path*", "/api/command/:path*", "/api/chat/:path*"],
 };
+

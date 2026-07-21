@@ -1,4 +1,4 @@
-/** Detect env presence only. Never return secret values. */
+﻿/** Detect env presence only. Never return secret values. */
 export function hasEnv(name: string): boolean {
   const v = process.env[name];
   return typeof v === "string" && v.trim().length > 0;
@@ -12,9 +12,9 @@ export function providerConfigured(envs: string[]): boolean {
   return envs.every((n) => hasEnv(n));
 }
 
-/** Stealth gate: command is locked unless token/auth is configured. */
+/** Production command access is ready only when both gate inputs exist. */
 export function commandGateConfigured(): boolean {
-  return hasEnv("COMMAND_ACCESS_TOKEN") || (hasEnv("AUTH_SECRET") && hasEnv("AUTH_GITHUB_ID"));
+  return hasEnv("COMMAND_ACCESS_TOKEN") && hasEnv("AUTH_SECRET");
 }
 
 export function commandTokenValid(token: string | null | undefined): boolean {
