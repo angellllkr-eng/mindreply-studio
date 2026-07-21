@@ -1,16 +1,25 @@
-﻿export type AurelSurface = {
+﻿export type OperationalStatus =
+  | "verified_live"
+  | "local"
+  | "route_api"
+  | "route_only"
+  | "blocked"
+  | "needs_owner"
+  | "missing_env";
+
+export type AurelSurface = {
   id: string;
   title: string;
   route: string;
   domain: string;
   visibility: "public" | "private" | "ops";
-  operationalLevel: 0 | 1 | 2 | 3 | 4;
-  status: "verified_live" | "local" | "route_api" | "route_only" | "blocked" | "needs_owner" | "missing_env";
+  level: 0 | 1 | 2 | 3 | 4;
+  status: OperationalStatus;
   purpose: string;
   works: string;
   blocked: string;
   nextAction: string;
-  approvalRequired: boolean;
+  approvals: string[];
   rollback: string;
 };
 
@@ -21,14 +30,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/command",
     domain: "command.a11-k.space",
     visibility: "private",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Private command cockpit for decisions, models, workflows, actions, approval and rollback.",
-    works: "Route and command APIs should load after this patch.",
-    blocked: "Auth/provider keys may still be missing.",
-    nextAction: "Protect route and connect provider keys.",
-    approvalRequired: true,
-    rollback: "Remove /command route and restore App.tsx backup."
+    purpose: "Private command cockpit for decisions, models, workflows, action queue, approval, cost guard and rollback.",
+    works: "Route and command APIs are created by this correction script.",
+    blocked: "Auth/provider/n8n/Vercel/GitHub env may still be missing.",
+    nextAction: "Verify /command locally, then protect route before exposing.",
+    approvals: ["auth", "dns", "secrets", "destructive actions"],
+    rollback: "Restore App.tsx and server/index.js from backup."
   },
   {
     id: "shell",
@@ -36,14 +45,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/shell",
     domain: "shell.mind-reply.com",
     visibility: "private",
-    operationalLevel: 3,
+    level: 3,
     status: "local",
-    purpose: "Existing integrated Shell using model-router, audit-log and AUREL design.",
-    works: "Existing Shell files are reused as source pattern.",
+    purpose: "Existing Shell path and backend integration pattern.",
+    works: "Existing project documentation says Shell uses model-router, audit-log, Express server and AUREL design.",
     blocked: "Production URL must be verified.",
-    nextAction: "Alias /command to the improved command cockpit.",
-    approvalRequired: false,
-    rollback: "Use original /shell route."
+    nextAction: "Keep /shell working while /command is upgraded.",
+    approvals: [],
+    rollback: "Use /shell directly."
   },
   {
     id: "mindreply",
@@ -51,14 +60,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/mindreply",
     domain: "mind-reply.com",
     visibility: "public",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Public commercial channel.",
-    works: "Registry route/API state exists.",
-    blocked: "Live domain check must confirm current deployment.",
-    nextAction: "Verify public site remains clean and not admin.",
-    approvalRequired: false,
-    rollback: "Keep public site separate from /command."
+    purpose: "Public customer-facing brand.",
+    works: "Registry state is available.",
+    blocked: "Live domain must be verified outside code.",
+    nextAction: "Keep public site separate from private command UI.",
+    approvals: ["public deploy"],
+    rollback: "Do not route public domain to private UI."
   },
   {
     id: "a11k",
@@ -66,14 +75,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/a11k",
     domain: "a11-k.space",
     visibility: "public",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Engine core and routing/trust layer.",
-    works: "Registry and command context exist.",
-    blocked: "Domain/project mapping must be verified.",
-    nextAction: "Attach verified route/domain only after Vercel project check.",
-    approvalRequired: true,
-    rollback: "Remove domain alias or revert routing."
+    purpose: "Engine core and operating-layer stamp.",
+    works: "Registry state is available.",
+    blocked: "Vercel/DNS mapping must be verified.",
+    nextAction: "Attach only after project and domain check.",
+    approvals: ["dns"],
+    rollback: "Remove alias or revert domain mapping."
   },
   {
     id: "aurel",
@@ -81,14 +90,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/aurel",
     domain: "aurel.a11-k.space",
     visibility: "private",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Premium private execution layer.",
-    works: "Command registry entry exists.",
-    blocked: "Auth and domain mapping.",
-    nextAction: "Connect protected execution context.",
-    approvalRequired: true,
-    rollback: "Disable route in registry."
+    purpose: "Private execution layer.",
+    works: "Registry state is available.",
+    blocked: "Auth gate required before sensitive data.",
+    nextAction: "Protect private route.",
+    approvals: ["auth"],
+    rollback: "Disable in registry."
   },
   {
     id: "brushworks",
@@ -96,29 +105,29 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/brushworks",
     domain: "brushworks.a11-k.space",
     visibility: "public",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Visual build layer.",
-    works: "Module state exists.",
-    blocked: "Design workflow not yet connected.",
-    nextAction: "Attach creative workflow status.",
-    approvalRequired: false,
-    rollback: "Hide surface from registry."
+    purpose: "Creative/visual build layer.",
+    works: "Registry state is available.",
+    blocked: "Creative workflow not wired.",
+    nextAction: "Connect workflow status when n8n is configured.",
+    approvals: [],
+    rollback: "Hide from public navigation."
   },
   {
     id: "tools",
-    title: "Tool Directory",
+    title: "Tools",
     route: "/s/tools",
     domain: "tools.mind-reply.com",
     visibility: "public",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Public tools directory.",
-    works: "Registry and route state exist.",
-    blocked: "Individual tool live checks.",
-    nextAction: "Verify SQL, Regex, Tutor, Lens.",
-    approvalRequired: false,
-    rollback: "Unlist directory."
+    purpose: "Tool directory.",
+    works: "Registry state is available.",
+    blocked: "Individual tool checks required.",
+    nextAction: "Verify SQL, Lens, Regex, Tutor routes.",
+    approvals: [],
+    rollback: "Unlist unavailable tools."
   },
   {
     id: "sql",
@@ -126,89 +135,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/sql",
     domain: "sql.mind-reply.com",
     visibility: "public",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "SQL generation tool surface.",
-    works: "Registry entry exists.",
-    blocked: "Need live check/provider wiring.",
-    nextAction: "Verify SQL endpoint and model backend.",
-    approvalRequired: false,
-    rollback: "Route back to placeholder."
-  },
-  {
-    id: "lens",
-    title: "Code Lens",
-    route: "/s/lens",
-    domain: "lens.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Code review and risk analysis.",
-    works: "Registry entry exists.",
-    blocked: "Repo audit workflow missing.",
-    nextAction: "Wire GitHub review action.",
-    approvalRequired: true,
-    rollback: "Disable review actions."
-  },
-  {
-    id: "sdr",
-    title: "SDR Agent",
-    route: "/s/sdr",
-    domain: "sdr.mind-reply.com",
-    visibility: "ops",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Lead research and outreach drafting.",
-    works: "Registry entry exists.",
-    blocked: "No sending without owner approval.",
-    nextAction: "Add approval gate.",
-    approvalRequired: true,
-    rollback: "Disable send action."
-  },
-  {
-    id: "regex",
-    title: "Regex Forge",
-    route: "/s/regex",
-    domain: "regex.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Regex generate/explain/test.",
-    works: "Registry entry exists.",
-    blocked: "Local tester not wired.",
-    nextAction: "Add safe test API.",
-    approvalRequired: false,
-    rollback: "Unlist tester."
-  },
-  {
-    id: "tutor",
-    title: "Code Tutor",
-    route: "/s/tutor",
-    domain: "tutor.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Code teaching surface.",
-    works: "Registry entry exists.",
-    blocked: "Lesson modes not wired.",
-    nextAction: "Add tutor prompt modes.",
-    approvalRequired: false,
-    rollback: "Disable tutor route."
-  },
-  {
-    id: "l402",
-    title: "L402 Skills",
-    route: "/s/l402",
-    domain: "l402.mind-reply.com",
-    visibility: "ops",
-    operationalLevel: 1,
-    status: "needs_owner",
-    purpose: "Paid skills/access layer.",
-    works: "Registry only.",
-    blocked: "Payment/access decision required.",
-    nextAction: "Owner approval before payment wiring.",
-    approvalRequired: true,
-    rollback: "Keep invisible."
+    purpose: "SQL helper surface.",
+    works: "Registry state is available.",
+    blocked: "Provider/tool backend must be verified.",
+    nextAction: "Run live check.",
+    approvals: [],
+    rollback: "Display safe placeholder."
   },
   {
     id: "models",
@@ -216,13 +150,13 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/models",
     domain: "models.a11-k.space",
     visibility: "ops",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Provider/env/fallback/cost status.",
-    works: "/api/models or /api/command/models can report missing env names.",
-    blocked: "Real provider keys may be missing.",
-    nextAction: "Connect AI_GATEWAY_API_KEY or provider keys.",
-    approvalRequired: true,
+    level: 2,
+    status: "missing_env",
+    purpose: "Provider status, missing env names, fallback state and cost risk.",
+    works: "/api/command/models reports env names only.",
+    blocked: "Provider keys may be missing.",
+    nextAction: "Add AI_GATEWAY_API_KEY or provider key in environment.",
+    approvals: ["secrets"],
     rollback: "Fallback Safe Mode."
   },
   {
@@ -231,119 +165,14 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/workflows",
     domain: "workflows.a11-k.space",
     visibility: "ops",
-    operationalLevel: 2,
+    level: 2,
     status: "missing_env",
-    purpose: "n8n workflow map and status.",
-    works: "API reports missing env honestly.",
-    blocked: "N8N_BASE_URL or N8N_API_KEY may be missing.",
-    nextAction: "Connect n8n credentials without exposing webhooks.",
-    approvalRequired: true,
+    purpose: "Workflow automation status without exposing webhooks.",
+    works: "/api/command/workflows reports missing n8n env honestly.",
+    blocked: "N8N_BASE_URL and N8N_API_KEY may be missing.",
+    nextAction: "Connect n8n credentials and test health only.",
+    approvals: ["secrets", "workflow triggers"],
     rollback: "Disable workflow triggers."
-  },
-  {
-    id: "status",
-    title: "Status",
-    route: "/s/status",
-    domain: "status.a11-k.space",
-    visibility: "public",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Public-safe system status.",
-    works: "Status API exists.",
-    blocked: "Production checks must verify URLs.",
-    nextAction: "Wire live URL checker.",
-    approvalRequired: false,
-    rollback: "Show local-only status."
-  },
-  {
-    id: "labs",
-    title: "Labs",
-    route: "/s/labs",
-    domain: "labs.a11-k.space",
-    visibility: "public",
-    operationalLevel: 1,
-    status: "route_only",
-    purpose: "Experiments and prototypes.",
-    works: "Registry route exists.",
-    blocked: "No experiment registry yet.",
-    nextAction: "Create experiment queue.",
-    approvalRequired: false,
-    rollback: "Hide route."
-  },
-  {
-    id: "vault",
-    title: "Idea Vault",
-    route: "/s/vault",
-    domain: "vault.a11-k.space",
-    visibility: "private",
-    operationalLevel: 1,
-    status: "blocked",
-    purpose: "Private source vault.",
-    works: "Registry only.",
-    blocked: "Must be protected before use.",
-    nextAction: "Add auth gate.",
-    approvalRequired: true,
-    rollback: "Keep blocked."
-  },
-  {
-    id: "unapolagetic",
-    title: "UNAPOLAGETIC",
-    route: "/s/unapolagetic",
-    domain: "unapolagetic.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Fashion/accessory commerce brand.",
-    works: "Brand ops section exists.",
-    blocked: "Commerce backend not connected.",
-    nextAction: "Fashion/accessories first; cosmetics blocked.",
-    approvalRequired: true,
-    rollback: "Unpublish commerce CTA."
-  },
-  {
-    id: "unapolagetic-shop",
-    title: "UNAPOLAGETIC Shop",
-    route: "/s/unapolagetic-shop",
-    domain: "shop.unapolagetic.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 1,
-    status: "needs_owner",
-    purpose: "Shop shell.",
-    works: "Registry only.",
-    blocked: "Shopify/product publishing owner approval.",
-    nextAction: "Connect only after approval.",
-    approvalRequired: true,
-    rollback: "Keep shop disabled."
-  },
-  {
-    id: "unapolagetic-ops",
-    title: "UNAPOLAGETIC Ops",
-    route: "/s/unapolagetic-ops",
-    domain: "ops.unapolagetic.mind-reply.com",
-    visibility: "private",
-    operationalLevel: 1,
-    status: "blocked",
-    purpose: "Supplier/product/compliance cockpit.",
-    works: "Registry only.",
-    blocked: "Must be private and protected.",
-    nextAction: "Add owner approval and compliance gates.",
-    approvalRequired: true,
-    rollback: "Keep blocked."
-  },
-  {
-    id: "trend-intel",
-    title: "Trend Intel",
-    route: "/s/trend-intel",
-    domain: "trends.a11-k.space",
-    visibility: "ops",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "HN/GitHub/npm market signal radar.",
-    works: "Can be wired as suggestions only.",
-    blocked: "No automatic acting.",
-    nextAction: "Review signals into action queue.",
-    approvalRequired: false,
-    rollback: "Disable trend fetch."
   },
   {
     id: "github-security",
@@ -351,13 +180,13 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/github-security",
     domain: "security.a11-k.space",
     visibility: "ops",
-    operationalLevel: 2,
+    level: 2,
     status: "missing_env",
-    purpose: "Dependabot/code/secret scanning and issue queue.",
-    works: "Local gh/API check can report status.",
-    blocked: "gh auth or GITHUB_TOKEN may be missing.",
-    nextAction: "Run security check and do not auto-dismiss.",
-    approvalRequired: true,
+    purpose: "Dependabot/code scanning/secret scanning issue awareness.",
+    works: "/api/command/security reports blocker safely.",
+    blocked: "GITHUB_TOKEN or gh auth may be missing.",
+    nextAction: "Run security audit; do not auto-dismiss.",
+    approvals: ["secret rotation"],
     rollback: "Report only."
   },
   {
@@ -366,89 +195,29 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/deployments",
     domain: "deployments.a11-k.space",
     visibility: "ops",
-    operationalLevel: 2,
+    level: 2,
     status: "missing_env",
-    purpose: "Build/deploy/rollback status.",
-    works: "Build script verifies locally.",
-    blocked: "Vercel auth/token may be missing.",
-    nextAction: "Deploy once only after build.",
-    approvalRequired: true,
-    rollback: "Use previous Vercel deployment."
+    purpose: "Build, deploy, URL verification and rollback awareness.",
+    works: "Build gate exists.",
+    blocked: "VERCEL_TOKEN/vercel auth may be missing.",
+    nextAction: "Deploy once only after build passes.",
+    approvals: ["production deploy"],
+    rollback: "Use previous deployment."
   },
   {
-    id: "support",
-    title: "Support Queue",
-    route: "/s/support",
-    domain: "support.mind-reply.com",
-    visibility: "ops",
-    operationalLevel: 1,
-    status: "needs_owner",
-    purpose: "Support triage.",
-    works: "Registry only.",
-    blocked: "Inbox connector requires owner approval.",
-    nextAction: "Add approval before sending replies.",
-    approvalRequired: true,
-    rollback: "Do not connect inbox."
-  },
-  {
-    id: "translations",
-    title: "Translation Ops",
-    route: "/s/translations",
-    domain: "translate.a11-k.space",
-    visibility: "ops",
-    operationalLevel: 2,
+    id: "unapolagetic",
+    title: "UNAPOLAGETIC",
+    route: "/s/unapolagetic",
+    domain: "unapolagetic.mind-reply.com",
+    visibility: "public",
+    level: 2,
     status: "route_api",
-    purpose: "English, Bulgarian, Spanish, German, French draft translations.",
-    works: "Registry state exists.",
-    blocked: "Reviewer workflow not connected.",
-    nextAction: "Mark all auto translations draft.",
-    approvalRequired: true,
-    rollback: "Disable language publish."
-  },
-  {
-    id: "proof",
-    title: "Live Proof",
-    route: "/s/proof",
-    domain: "proof.a11-k.space",
-    visibility: "ops",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Verified claims only.",
-    works: "Proof card exists.",
-    blocked: "Live checks must be recorded.",
-    nextAction: "Attach URL verification report.",
-    approvalRequired: false,
-    rollback: "Downgrade to local status."
-  },
-  {
-    id: "approval",
-    title: "Owner Approval",
-    route: "/s/approval",
-    domain: "approval.a11-k.space",
-    visibility: "private",
-    operationalLevel: 1,
-    status: "blocked",
-    purpose: "Approval queue for money, DNS, secrets, product publishing, ads, refunds.",
-    works: "Registry only.",
-    blocked: "Needs auth and persistence.",
-    nextAction: "Protect and persist queue.",
-    approvalRequired: true,
-    rollback: "Manual approval only."
-  },
-  {
-    id: "costs",
-    title: "Cost Guard",
-    route: "/s/costs",
-    domain: "costs.a11-k.space",
-    visibility: "ops",
-    operationalLevel: 2,
-    status: "route_api",
-    purpose: "Deployment limits, model cost, workflow spam, paid-app risk.",
-    works: "Card and status exist.",
-    blocked: "Billing integrations not connected.",
-    nextAction: "Keep warnings active.",
-    approvalRequired: true,
-    rollback: "Disable expensive actions."
+    purpose: "Fashion/accessory brand surface.",
+    works: "Registry and command card exist.",
+    blocked: "Commerce backend and compliance gates not connected.",
+    nextAction: "Fashion/accessories first; keep cosmetics blocked.",
+    approvals: ["product publishing", "paid apps", "ads"],
+    rollback: "Disable shop/actions."
   },
   {
     id: "rollback",
@@ -456,43 +225,25 @@ export const aurelSurfaces: AurelSurface[] = [
     route: "/s/rollback",
     domain: "rollback.a11-k.space",
     visibility: "ops",
-    operationalLevel: 2,
+    level: 2,
     status: "route_api",
-    purpose: "Undo path for deploy, DNS, workflow, provider, product, route.",
-    works: "Card and status exist.",
-    blocked: "Needs last deployment metadata.",
-    nextAction: "Attach last known good deployment.",
-    approvalRequired: false,
-    rollback: "Manual revert."
-  },
-  {
-    id: "agency",
-    title: "MindReply Agency Ops",
-    route: "/s/agency",
-    domain: "agency.mind-reply.com",
-    visibility: "public",
-    operationalLevel: 1,
-    status: "route_only",
-    purpose: "Website completion and response overload offer.",
-    works: "Registry route.",
-    blocked: "Offer page not verified.",
-    nextAction: "Keep public simple.",
-    approvalRequired: false,
-    rollback: "Hide agency route."
-  },
-  {
-    id: "arena",
-    title: "AI Arena",
-    route: "/s/arena",
-    domain: "arena.a11-k.space",
-    visibility: "ops",
-    operationalLevel: 1,
-    status: "route_only",
-    purpose: "Compare models/prompts safely.",
-    works: "Registry route.",
-    blocked: "No provider cost guard yet.",
-    nextAction: "Add cost warning before tests.",
-    approvalRequired: true,
-    rollback: "Disable Arena."
+    purpose: "Undo plan for risky changes.",
+    works: "Backup/restore exists in this script.",
+    blocked: "Deployment metadata still needs attachment.",
+    nextAction: "Record last known good deployment.",
+    approvals: [],
+    rollback: "Restore backups or revert commit."
   }
 ];
+
+export const commandSummary = {
+  total: aurelSurfaces.length,
+  level4: aurelSurfaces.filter((s) => s.level === 4).length,
+  level3: aurelSurfaces.filter((s) => s.level === 3).length,
+  level2: aurelSurfaces.filter((s) => s.level === 2).length,
+  level1: aurelSurfaces.filter((s) => s.level === 1).length,
+  level0: aurelSurfaces.filter((s) => s.level === 0).length,
+  blocked: aurelSurfaces.filter((s) =>
+    ["blocked", "needs_owner", "missing_env"].includes(s.status)
+  ).length
+};

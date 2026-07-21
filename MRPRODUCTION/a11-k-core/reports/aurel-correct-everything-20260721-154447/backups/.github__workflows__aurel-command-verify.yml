@@ -48,7 +48,7 @@ jobs:
       - name: Verify command files
         run: |
           test -f src/pages/Command.tsx
-          test -f src/components/AurelCommandFrame.tsx
+          test -f src/components/AurelCommandCards.tsx
           test -f src/data/aurelRegistry.ts
           grep -R "/command" src/App.tsx
-          echo "AUREL command correction verified"
+          echo "AUREL command files verified"

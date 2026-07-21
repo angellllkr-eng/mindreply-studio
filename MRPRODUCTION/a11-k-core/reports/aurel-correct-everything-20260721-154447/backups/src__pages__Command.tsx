@@ -1,7 +1,7 @@
-﻿import React, { useEffect, useState } from "react";
-import { AurelCommandFrame } from "../components/AurelCommandFrame";
+﻿import React, { useEffect, useMemo, useState } from "react";
+import { AurelCommandCards } from "../components/AurelCommandCards";
 
-type Message = {
+type ChatMessage = {
   role: "system" | "user" | "aurel";
   text: string;
 };
@@ -11,55 +11,67 @@ export default function Command() {
   const [mode, setMode] = useState("Chief Orchestrator");
   const [context, setContext] = useState("Whole Estate");
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState<any>(null);
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "system",
-      text: "AUREL Command is active. This cockpit shows what is real, what is blocked, and what needs approval."
+      text: "AUREL Command is active. This cockpit reports what is real, what is blocked, and what needs owner approval."
     }
   ]);
+  const [status, setStatus] = useState<any>(null);
+  const [models, setModels] = useState<any>(null);
 
   useEffect(() => {
     document.title = "AUREL Command — Powered by A11-K";
-    const meta = document.querySelector('meta[name="robots"]') || document.createElement("meta");
-    meta.setAttribute("name", "robots");
-    meta.setAttribute("content", "noindex,nofollow");
-    document.head.appendChild(meta);
-
-    fetch("/api/command/status")
-      .then((r) => r.json())
-      .then(setStatus)
-      .catch(() => setStatus({ ok: false, blocked: "status_endpoint_unavailable" }));
+    loadStatus();
   }, []);
+
+  async function loadStatus() {
+    const safeFetch = async (url: string) => {
+      try {
+        const r = await fetch(url);
+        return await r.json();
+      } catch {
+        return { ok: false, blocked: "endpoint_unavailable", url };
+      }
+    };
+
+    const s = await safeFetch("/api/command/status");
+    const m = await safeFetch("/api/command/models");
+    setStatus(s);
+    setModels(m);
+  }
 
   async function send() {
     const text = input.trim();
     if (!text) return;
 
-    setMessages((old) => [...old, { role: "user", text }]);
+    setMessages((m) => [...m, { role: "user", text }]);
     setInput("");
 
     const payload = { message: text, model, mode, context };
 
     try {
-      const res = await fetch("/api/command/chat", {
+      let r = await fetch("/api/command/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
-      const data = await res.json().catch(() => ({}));
+      if (!r.ok) {
+        r = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      }
 
-      setMessages((old) => [
-        ...old,
-        {
-          role: "aurel",
-          text: data.answer || "AI chat is ready, but no production provider key is connected yet. Missing env: AI_GATEWAY_API_KEY or provider key."
-        }
-      ]);
+      const data = await r.json().catch(() => ({}));
+      const answer = data.answer || data.message || "AI chat is ready, but no production provider key is connected yet. Missing env: AI_GATEWAY_API_KEY or provider key.";
+
+      setMessages((m) => [...m, { role: "aurel", text: answer }]);
     } catch {
-      setMessages((old) => [
-        ...old,
+      setMessages((m) => [
+        ...m,
         {
           role: "aurel",
           text: "AI chat is ready, but no production provider key is connected yet. Missing env: AI_GATEWAY_API_KEY or provider key."
@@ -68,18 +80,29 @@ export default function Command() {
     }
   }
 
-  const quick = [
-    "What should I do next?",
-    "What is blocked?",
-    "Check my sites",
-    "Show workflows",
-    "Show cost risks",
-    "Show rollback plan",
-    "What needs my approval?",
-    "Build UNAPOLAGETIC plan",
-    "Check GitHub security",
-    "Check live URLs"
-  ];
+  const quick = useMemo(
+    () => [
+      "What should I do next?",
+      "What is blocked?",
+      "Check my sites",
+      "Show workflows",
+      "Show cost risks",
+      "Show rollback plan",
+      "What needs my approval?",
+      "Build UNAPOLAGETIC plan",
+      "Check GitHub security",
+      "Check live URLs"
+    ],
+    []
+  );
+
+  const blockers = [
+    status?.blocked || null,
+    models?.blocked || null,
+    "Private route protection must be verified before exposing sensitive data",
+    "n8n actions require N8N_BASE_URL and N8N_API_KEY",
+    "Vercel deploy must run once only after build passes"
+  ].filter(Boolean);
 
   return (
     <main className="min-h-screen bg-[#05070b] text-white">
@@ -110,7 +133,7 @@ export default function Command() {
           </nav>
 
           <div className="mt-6 rounded-2xl border border-[#5ee1ff]/20 bg-[#5ee1ff]/10 p-3 text-xs text-[#b8f3ff]">
-            Private route. No secrets. No fake live data.
+            This page must stay private. No secrets. No fake live data.
           </div>
         </aside>
 
@@ -121,7 +144,7 @@ export default function Command() {
                 <p className="text-xs uppercase tracking-[0.35em] text-[#5ee1ff]">Private owner cockpit</p>
                 <h2 className="mt-2 text-4xl font-semibold tracking-tight">Ask AUREL</h2>
                 <p className="mt-1 text-sm text-white/60">
-                  Decisions, workflows, models, sites, security, proof and rollback.
+                  Decisions, workflows, models, sites, security, proof and rollback. No fake done.
                 </p>
               </div>
 
@@ -153,7 +176,7 @@ export default function Command() {
 
               <div className="min-h-[420px] space-y-3 rounded-3xl border border-white/10 bg-black/30 p-4">
                 {messages.map((m, i) => (
-                  <div key={`${m.role}-${i}`} className={m.role === "user" ? "ml-auto max-w-[86%] rounded-2xl bg-[#5ee1ff]/15 p-3 text-sm" : "max-w-[86%] rounded-2xl bg-white/[0.06] p-3 text-sm text-white/80"}>
+                  <div key={i} className={m.role === "user" ? "ml-auto max-w-[86%] rounded-2xl bg-[#5ee1ff]/15 p-3 text-sm" : "max-w-[86%] rounded-2xl bg-white/[0.06] p-3 text-sm text-white/80"}>
                     <div className="mb-1 text-[10px] uppercase tracking-[0.22em] text-white/35">{m.role}</div>
                     {m.text}
                   </div>
@@ -164,9 +187,7 @@ export default function Command() {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") send();
-                  }}
+                  onKeyDown={(e) => { if (e.key === "Enter") send(); }}
                   placeholder="Ask AUREL what to ship, fix, verify or block..."
                   className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm outline-none"
                 />
@@ -181,36 +202,30 @@ export default function Command() {
               <p className="mt-1 text-sm text-white/50">{model} · {mode} · {context}</p>
 
               <div className="mt-5 space-y-3">
-                <Block title="Current blockers" items={[
-                  status?.blocked || "Status loaded locally",
-                  "Provider keys may be missing",
-                  "n8n requires N8N_BASE_URL and N8N_API_KEY",
-                  "Production route must be protected",
-                  "No deploy until build passes"
-                ]} />
+                <Block title="Current blockers" items={blockers.slice(0, 5)} />
                 <Block title="Next 3 actions" items={[
-                  "Verify /command locally",
-                  "Connect provider/env only when ready",
-                  "Deploy once after build and project check"
+                  "Verify /command locally and in production",
+                  "Connect provider keys or keep fallback safe mode",
+                  "Wire n8n only after env and auth are confirmed"
                 ]} />
                 <Block title="Approval required" items={[
                   "DNS/domain changes",
                   "secrets/env changes",
                   "product publishing",
                   "ads/spend",
-                  "destructive actions"
+                  "refunds/destructive actions"
                 ]} />
-                <Block title="Rollback" items={[
-                  "Restore backups from reports folder",
-                  "Revert commit",
-                  "Use previous Vercel deployment"
+                <Block title="Rollback hint" items={[
+                  "Restore backed up App.tsx/server/index.js",
+                  "Disable /command route if private protection fails",
+                  "Stop deploying if Vercel limit appears"
                 ]} />
               </div>
             </aside>
           </div>
 
           <section className="mt-4">
-            <AurelCommandFrame />
+            <AurelCommandCards />
           </section>
         </section>
       </div>
