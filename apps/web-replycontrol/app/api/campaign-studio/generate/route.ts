@@ -12,27 +12,77 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Placeholder — replace with OpenAI / Anthropic later
-    const result = `Agency Campaign Brief: ${prompt}
+    const apiKey = process.env.OPENAI_API_KEY;
 
-Brand context: ${brand ?? 'replycontrol'}
+    // Fallback to structured placeholder if OPENAI_API_KEY is not configured
+    if (!apiKey) {
+      const mockResult = `[DEMO MODE - Add OPENAI_API_KEY to Vercel Environment Variables for live AI]
 
-• Creative Concepts (3 variants)
-  1. Bold authority positioning
-  2. Data-driven thought leadership
-  3. Peer-to-peer CMO narrative
+Agency Campaign Brief: ${prompt}
+Brand Context: ${brand ?? 'replycontrol'}
 
-• Channel Strategy
-  – LinkedIn organic + sponsored
-  – Email nurture sequence (5 touches)
-  – Retargeting ads
+• Creative Concepts (3 Variants)
+  1. Bold Authority: "Scale Without the Workload"
+  2. Data-Driven: "3x Campaign Output using Autonomous AI Agents"
+  3. Executive Narrative: "How Modern Agencies Out-Execute Competitors"
 
-• Client Presentation Deck Ready
-• Automated Execution Agents Deployed
-• Timeline: 48h first draft → 72h full package`;
+• Channel Strategy & Asset Breakdown
+  – LinkedIn Organic: 5 thought-leadership posts with carousel hooks
+  – Cold Email Sequence: 4-step personalized nurture (CMO angle)
+  – Paid Social: 3 ad copy variants targeting Marketing Directors
 
-    return NextResponse.json({ content: result });
-  } catch {
+• Deliverables & Timeline
+  – Executive Pitch Deck: Generated
+  – Execution Workflow: Ready for deployment in Team Cockpit
+  – Estimated SLA: First drafts in 2 hours, full rollout in 24 hours`;
+
+      return NextResponse.json({ content: mockResult });
+    }
+
+    // Live OpenAI GPT-4o call
+    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: `You are ReplyControl Agency OS, an elite AI campaign strategist and creative director for top-tier marketing agencies. 
+Generate client-ready, multi-channel campaign strategies including:
+1. Executive Summary & Core Angle
+2. 3 Distinct Creative Concepts (with copy hooks)
+3. Channel Strategy (LinkedIn, Email, Paid Social)
+4. Key Deliverables & Next Steps for Execution.
+Format clearly using clean Markdown.`,
+          },
+          {
+            role: 'user',
+            content: `Client Prompt: ${prompt}\nBrand: ${brand ?? 'replycontrol'}`,
+          },
+        ],
+        temperature: 0.7,
+      }),
+    });
+
+    if (!openaiRes.ok) {
+      const errData = await openaiRes.json();
+      console.error('OpenAI API Error:', errData);
+      return NextResponse.json(
+        { error: 'AI generation failed. Check API key and quota.' },
+        { status: 500 }
+      );
+    }
+
+    const data = await openaiRes.json();
+    const content = data.choices?.[0]?.message?.content ?? 'No content generated.';
+
+    return NextResponse.json({ content });
+  } catch (err) {
+    console.error('API Error:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
