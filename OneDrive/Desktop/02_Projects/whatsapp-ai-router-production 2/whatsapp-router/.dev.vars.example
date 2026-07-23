@@ -1,0 +1,26 @@
+﻿# Copy to .dev.vars for local `wrangler dev` testing. NEVER commit .dev.vars.
+# In production these are set with `wrangler secret put <NAME>`, not this file.
+
+WHATSAPP_VERIFY_TOKEN=
+WHATSAPP_APP_SECRET=
+WHATSAPP_ACCESS_TOKEN=
+
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+XAI_API_KEY=
+GEMINI_API_KEY=
+GROQ_API_KEY=
+
+AIRTABLE_API_TOKEN=
+AIRTABLE_BASE_ID=
+
+# Supabase logging is ON by default (ENABLE_SUPABASE_LOG in wrangler.toml).
+# Project already exists (MindR, aziwdgndohdgnwztpwdi) - URL is that project's
+# API URL. Use the service_role key, not anon/publishable - RLS is enabled on
+# proof_receipts and service_role is what a trusted backend should use.
+SUPABASE_URL=https://aziwdgndohdgnwztpwdi.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=
+
+# PATCH talk — Cloudflare Whisper Worker URL (deploy whisper-worker first, paste URL here)
+WHISPER_WORKER_URL=https://patch-talk.YOUR-SUBDOMAIN.workers.dev
+

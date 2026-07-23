@@ -1,0 +1,26 @@
+﻿name = "whatsapp-ai-router"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+WHATSAPP_GRAPH_VERSION = "v22.0"
+WHISPER_WORKER_URL = "https://patch-talk.mrdirector.workers.dev"
+WHATSAPP_VERIFY_TOKEN = "vhzlJuRgBd7PAHFX64rQZkE9UetNyMfj"
+RATE_LIMIT_MAX_PER_HOUR = "20"
+ENABLE_AIRTABLE_LOG = "false"
+ENABLE_SUPABASE_LOG = "true"
+ENABLE_D1_LOG = "true"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "0eaa9a5211094f59b0c5afd3af6f4e36"
+
+[[kv_namespaces]]
+binding = "DEDUP_KV"
+id = "c5e7ce66977541e2bd075db8fea36e42"
+
+[[d1_databases]]
+binding = "OPS_DB"
+database_name = "whatsapp-router-ops"
+database_id = "93390edc-2817-4b9f-8099-ee2cb5a0a55a"
