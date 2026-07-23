@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const SYSTEM_PROMPT = `You are ReplyControl Agency OS, an elite AI campaign strategist and creative director for top-tier marketing agencies.
+Generate client-ready, multi-channel campaign strategies including:
+1. Executive Summary & Core Angle
+2. 3 Distinct Creative Concepts (with copy hooks)
+3. Channel Strategy (LinkedIn, Email, Paid Social)
+4. Key Deliverables & Next Steps for Execution.
+Format clearly using clean Markdown.`;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -12,11 +20,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
 
-    // Fallback to structured placeholder if OPENAI_API_KEY is not configured
+    // Demo mode if key is missing
     if (!apiKey) {
-      const mockResult = `[DEMO MODE - Add OPENAI_API_KEY to Vercel Environment Variables for live AI]
+      const mockResult = `[DEMO MODE — Add ANTHROPIC_API_KEY in Vercel Environment Variables for live Claude]
 
 Agency Campaign Brief: ${prompt}
 Brand Context: ${brand ?? 'replycontrol'}
@@ -39,46 +47,49 @@ Brand Context: ${brand ?? 'replycontrol'}
       return NextResponse.json({ content: mockResult });
     }
 
-    // Live OpenAI GPT-4o call
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    const model =
+      process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-20250514';
+
+    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model,
+        max_tokens: 4096,
+        temperature: 0.7,
+        system: SYSTEM_PROMPT,
         messages: [
-          {
-            role: 'system',
-            content: `You are ReplyControl Agency OS, an elite AI campaign strategist and creative director for top-tier marketing agencies. 
-Generate client-ready, multi-channel campaign strategies including:
-1. Executive Summary & Core Angle
-2. 3 Distinct Creative Concepts (with copy hooks)
-3. Channel Strategy (LinkedIn, Email, Paid Social)
-4. Key Deliverables & Next Steps for Execution.
-Format clearly using clean Markdown.`,
-          },
           {
             role: 'user',
             content: `Client Prompt: ${prompt}\nBrand: ${brand ?? 'replycontrol'}`,
           },
         ],
-        temperature: 0.7,
       }),
     });
 
-    if (!openaiRes.ok) {
-      const errData = await openaiRes.json();
-      console.error('OpenAI API Error:', errData);
+    if (!anthropicRes.ok) {
+      const errData = await anthropicRes.text();
+      console.error('Anthropic API Error:', anthropicRes.status, errData);
       return NextResponse.json(
-        { error: 'AI generation failed. Check API key and quota.' },
+        {
+          error:
+            'AI generation failed. Check ANTHROPIC_API_KEY, model access, and quota.',
+        },
         { status: 500 }
       );
     }
 
-    const data = await openaiRes.json();
-    const content = data.choices?.[0]?.message?.content ?? 'No content generated.';
+    const data = await anthropicRes.json();
+    const content =
+      data.content
+        ?.filter((block: { type: string }) => block.type === 'text')
+        .map((block: { text: string }) => block.text)
+        .join('\n')
+        .trim() || 'No content generated.';
 
     return NextResponse.json({ content });
   } catch (err) {
