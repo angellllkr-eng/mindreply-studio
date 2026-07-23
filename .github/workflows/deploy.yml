@@ -1,0 +1,31 @@
+name: Deploy &amp; Verify
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install &amp; Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify Production
+        run: |
+          sleep 30
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://aurel.mind-reply.com || echo 000)
+          if [ "$STATUS" != "200" ]; then
+            echo "Deployment verification failed"
+            exit 1
+          fi
+          echo "✅ Production verified: $STATUS"

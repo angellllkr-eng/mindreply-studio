@@ -1,0 +1,17 @@
+{
+  "name": "mind-reply",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:replycontrol": "npm run dev -w web-replycontrol",
+    "build:replycontrol": "npm run build -w web-replycontrol",
+    "dev": "npm run dev -w web-replycontrol",
+    "build": "npm run build -w web-replycontrol"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
