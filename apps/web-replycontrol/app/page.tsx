@@ -18,7 +18,7 @@ export default function ReplyControlHome() {
             <Link href="/campaign-studio" className="hover:text-white transition">
               Studio
             </Link>
-            <Link href="#team" className="hover:text-white transition">
+            <Link href="/team-cockpit" className="hover:text-white transition">
               Team Cockpit
             </Link>
             <Link
@@ -99,9 +99,15 @@ export default function ReplyControlHome() {
       <section id="team" className="py-24 border-t border-zinc-900">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Team Cockpit</h2>
-          <p className="text-zinc-400 text-lg">
-            Orchestrate specialists and agents from one command surface. Full cockpit UI coming next.
+          <p className="text-zinc-400 text-lg mb-8">
+            Orchestrate specialists and agents from one unified command surface.
           </p>
+          <Link
+            href="/team-cockpit"
+            className="inline-flex px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-medium transition"
+          >
+            Launch Team Cockpit →
+          </Link>
         </div>
       </section>
     </div>
